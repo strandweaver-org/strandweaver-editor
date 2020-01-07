@@ -1,0 +1,15 @@
+= form_for @script do |f|
+  - if @script.errors.any?
+    #error_explanation
+      h2 = "#{pluralize(@script.errors.count, "error")} prohibited this script from being saved:"
+      ul
+        - @script.errors.full_messages.each do |message|
+          li = message
+
+  .field
+    = f.label :title
+    = f.text_field :title
+  .field
+    = f.label :data
+    = react_component "Editor", initialData: @script.data
+  .actions = f.submit
