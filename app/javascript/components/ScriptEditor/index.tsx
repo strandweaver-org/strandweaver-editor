@@ -1,26 +1,19 @@
-import React, {useEffect} from 'react';
-import {StoreProvider} from 'easy-peasy';
+import React, { useEffect } from 'react';
+import { StoreProvider } from 'easy-peasy';
 import scriptEditorStore from './Store'
 import Editor from './components/Editor';
-import {useStoreActions} from './hooks'
 
-interface IEditorProps {
+interface IScriptEditorProps {
   initialData: string;
 }
 
-const ScriptEditor: React.FC<IEditorProps> = ({initialData}) => {
-  const setData = useStoreActions( actions => actions.script.setData);
+const ScriptEditor: React.FC<IScriptEditorProps> = ({ initialData }) => {
 
-  useEffect(() => { })
-  const se
-
-  const [data, setData]  = useState(initialData);
-  
   return (
     <StoreProvider store={scriptEditorStore}>
-
+      <Editor initialData={initialData} />
     </StoreProvider>
   );
 }
 
-export default Editor
+export default ScriptEditor
