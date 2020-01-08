@@ -11,5 +11,5 @@
     = f.text_field :title
   .field
     = f.label :data
-    = react_component "Editor", initialData: @script.data
+    = react_component "ScriptEditor", initialData: @script.data
   .actions = f.submit

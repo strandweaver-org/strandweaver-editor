@@ -4,12 +4,11 @@ import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-markdown";
 import "ace-builds/src-noconflict/theme-github";
 
-interface IEditorProps {
-  initialData: string;
-}
+import {useStoreActions, useStoreState} from '../hooks'
 
-const Editor: React.FC<IEditorProps> = ({initialData}) => {
-  const [data, setData]  = useState(initialData);
+const Editor: React.FC<IEditorProps> = () => {
+    const setData = useStoreActions( actions => actions.script.setData);
+  const data = useStoreState(state => state.script.data);
   return (
     <div> 
       <input type="hidden" id="script_data" name="script[data]" value={data}/>
