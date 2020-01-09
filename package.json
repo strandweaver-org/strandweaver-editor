@@ -40,5 +40,10 @@
     "prettier": "^1.19.1",
     "typescript": "^3.7.4",
     "webpack-dev-server": "^3.10.1"
+  },
+  "jest": {
+    "roots": [
+      "spec/javascript"
+    ]
   }
 }
