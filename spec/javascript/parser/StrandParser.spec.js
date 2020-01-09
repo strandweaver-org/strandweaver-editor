@@ -1,4 +1,4 @@
-import StrandLanguage from "./StrandLanguage";
+import StrandLanguage from "parser/StrandLanguage";
 
 it("given plain text", () => {
   const text = `\
