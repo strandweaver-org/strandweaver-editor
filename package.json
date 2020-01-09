@@ -43,7 +43,12 @@
   },
   "jest": {
     "roots": [
-      "spec/javascript"
+      "spec/javascript",
+      "app/javascript"
+    ],
+    "moduleDirectories": [
+      "node_modules",
+      "app/javascript"
     ]
   }
 }
