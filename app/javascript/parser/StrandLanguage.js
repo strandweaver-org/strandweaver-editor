@@ -1,17 +1,34 @@
 import * as P from "parsimmon";
 
-///////////////////////////////////////////////////////////////////////
+const PARSER_ERRORS = {
+  INVALID_KNOT_NAME: (v) => `${v} is an invalid knot name.\nKnot names must be only letters, numbers, and an underscore`
+}
 
-// Because parsing indentation-sensitive languages such as Python requires
-// tracking state, all of our parsers are created inside a function that takes
-// the current parsing state. In this case it's just the current indentation
-// level, but a real Python parser would also *at least* need to keep track of
-// whether the current parsing is inside of () or [] or {} so that you can know
-// to ignore all whitespace, instead of further tracking indentation.
-//
-// Implementing all of Python's various whitespace requirements, including
-// comments and line continuations (backslash at the end of the line) is left as
-// an exercise for the reader. I've tried and frankly it's pretty tricky.
+function errorMsg(constant, value) {
+  const errorGen = PARSER_ERRORS[constant];
+
+  if (errorGen) {
+    return `${constant}: ${errorGen(value)}`
+  } else {
+    return `INVALID_ERROR_TYPE: Error type ${constant}`
+  }
+}
+
+let knotAutoNameNumber = 0;
+function generateKnot(name) {
+  let knotName = name;
+  if (knotName == undefined) {
+    knotAutoNameNumber += 1;
+    knotName = `k_${knotAutoNameNumber}`;
+  }
+
+  return [["knot", knotName]]
+}
+
+function token(parser) {
+  return parser.skip(P.whitespace)
+}
+
 function StrandLanguage(indent) {
   return P.createLanguage({
     // This is where the magic happens. Basically we need to parse a deeper
@@ -35,7 +52,17 @@ function StrandLanguage(indent) {
 
     // This is just a statement in our language. To simplify, this is either a
     // block of code or just an identifier
-    Statement: r => P.alt(r.Block, r.Ident),
+    Statement: r => P.alt(r.Knot),
+
+    Knot: r => P.regexp(/===\s+(.+)\s+===/, 1).chain(name => {
+      if (/^[A-Za-z0-9_]+$/.test(name)) {
+        return P.succeed([["knot", name]])
+      } else {
+        return P.fail(errorMsg("INVALID_KNOT_NAME", name))
+      }
+    }).thru(token).skip(r.End),
+
+    Text: r => P.regexp(/.*/),
 
     // This is a statement which is indented to the level of the current parse
     // state. It's called RestStatement because the first statement in a block
