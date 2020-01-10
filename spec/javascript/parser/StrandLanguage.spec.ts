@@ -12,7 +12,9 @@ describe("named knots", () => {
     const res: P.Result<any> = parse(`=== opening_door === `);
 
     expect(res).toBeAValidScript();
-    expect((res as P.Success<any>).value[0]).toBeAKnot();
+
+    const success = res as P.Success<any>;
+    expect(success.value[0]).toBeAnElementOfType('Knot');
   });
 
   it("given two knots", () => {
@@ -26,15 +28,19 @@ describe("named knots", () => {
     expect(success.value[1]).toBeAKnotWithName("xxx");
   });
 
-  it("given a knot with an invalid name", () => {
-    const res = parse(`=== Boop Beep === `);
-    expect(res).not.toBeAValidScript();
-    expect(res).toContainScriptError("INVALID_KNOT_NAME");
-
-  })
-
 })
 
 describe('single line comments', () => {
+  it("a comment and a knot work", () => {
+    const res = parse(`=== first_knot ===
+// yyy
+xxx`);
+    expect(res).toBeAValidScript();
+    const success = res as P.Success<any>;
+    expect(success.value[0]).toBeAnElementOfType("Knot");
+    expect(success.value[1]).toBeAnElementOfType("Comment");
+    expect(success.value[2]).toBeAnElementOfType("Paragraph");
+
+  })
 
 })

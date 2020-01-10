@@ -17,5 +17,7 @@ export default class Knot extends Element {
 
   }
 
-
+  getType(): string {
+    return 'Knot';
+  }
 }

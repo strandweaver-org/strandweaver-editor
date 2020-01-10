@@ -9,5 +9,7 @@ export default class Paragraph extends Element {
     this.text = text
   }
 
-
+  getType(): string {
+    return 'Paragraph';
+  }
 }
