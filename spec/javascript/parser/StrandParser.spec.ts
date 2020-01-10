@@ -1,8 +1,11 @@
-import StrandLanguage from "parser/StrandLanguage";
+// import StrandLanguage from "../../../app/javascript/parser/StrandLanguage"
+// TODO: currnetly including spec files in the webpack
+import StrandLanguage from "@App/parser/StrandLanguage";
 
 function parse(text) {
   return StrandLanguage.Statement.parse(text);
 }
+
 
 describe("named knots", () => {
   it("given a knot with extra whitespace", () => {

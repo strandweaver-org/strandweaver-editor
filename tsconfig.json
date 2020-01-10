@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
     "declaration": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -12,10 +14,22 @@
     "sourceMap": true,
     "target": "es5",
     "jsx": "react",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "paths": {
+      "@App/*": [
+        "app/javascript/*"
+      ],
+      "@Tests/*": [
+        "spec/javascript/*"
+      ]
+    },
   },
+  "include": [
+    "app/javascript/**/*",
+    "spec/javascript/**/*"
+  ],
   "exclude": [
-    "**/*.spec.ts",
     "node_modules",
     "vendor",
     "public"

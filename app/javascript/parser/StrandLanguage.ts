@@ -47,10 +47,10 @@ function StrandLanguage(indent) {
       P.seqObj(
         P.string("block:"),
         r.NL,
-        ["n", r.IndentMore],
-        ["first", r.Statement]
+        ["n" as never, r.IndentMore as P.Parser<never>],
+        ["first" as never, r.Statement as P.Parser<never>]
       ).chain(args => {
-        const { n, first } = args;
+        const { n, first } = args as any;
         return StrandLanguage(n)
           .RestStatement.many()
           .map(rest => ["BLOCK", first, ...rest]);
