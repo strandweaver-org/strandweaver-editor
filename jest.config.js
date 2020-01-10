@@ -3,11 +3,6 @@ module.exports = {
     "^.+\\.jsx?$": "babel-jest",
     "^.+\\.tsx?$": "ts-jest"
   },
-  paths: {
-    "@App/*": [
-      "app/javascript/*"
-    ]
-  },
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
   moduleDirectories: [
     "node_modules",

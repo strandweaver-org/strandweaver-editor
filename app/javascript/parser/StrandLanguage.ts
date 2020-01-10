@@ -1,10 +1,11 @@
 import * as P from "parsimmon";
+import { Knot, Paragraph } from "./Elements"
 
 const PARSER_ERRORS = {
-  INVALID_KNOT_NAME: (v) => `${v} is an invalid knot name.\nKnot names must be only letters, numbers, and an underscore`
+  INVALID_KNOT_NAME: (v: string) => `${v} is an invalid knot name.\nKnot names must be only letters, numbers, and an underscore`
 }
 
-function errorMsg(constant, value) {
+function errorMsg(constant: string, value: string) {
   const errorGen = PARSER_ERRORS[constant];
 
   if (errorGen) {
@@ -14,28 +15,11 @@ function errorMsg(constant, value) {
   }
 }
 
-let knotAutoNameNumber = 0;
-function getKnotName(name) {
-  if (name != undefined) {
-    return name
-  }
-
-  knotAutoNameNumber += 1;
-  return `k_${knotAutoNameNumber}`;
+function token(parser: P.Parser<any>) {
+  return parser.skip(P.optWhitespace)
 }
 
-function buildKnot({ name } = {}) {
-  return {
-    type: "knot",
-    name: getKnotName(name)
-  }
-}
-
-function token(parser) {
-  return parser.skip(P.whitespace)
-}
-
-function StrandLanguage(indent) {
+function StrandLanguage(indent: number): P.Language {
   return P.createLanguage({
     // This is where the magic happens. Basically we need to parse a deeper
     // indentation level on the first statement of the block and keep track of
@@ -58,17 +42,22 @@ function StrandLanguage(indent) {
 
     // This is just a statement in our language. To simplify, this is either a
     // block of code or just an identifier
-    Statement: r => P.alt(r.Knot),
+    Statement: r => P.alt(r.Knot, r.Comment),
+    Script: r => r.Statement.many(),
 
-    Knot: r => P.regexp(/===\s+(.+)\s+===/, 1).chain(name => {
+    Knot: r => P.regexp(/===[ ]+(.+)[ ]+===/, 1).chain(name => {
       if (/^[A-Za-z0-9_]+$/.test(name)) {
-        return P.succeed([buildKnot({ name: name })])
+        return P.succeed(new Knot(name))
       } else {
         return P.fail(errorMsg("INVALID_KNOT_NAME", name))
       }
-    }).thru(token).skip(r.End),
+    }).thru(token),
 
-    Text: r => P.regexp(/.*/),
+    Comment: r => P.regexp(/\/\/ .+/),
+
+    Text: r => P.regexp(/.*/).chain(text => {
+      return P.succeed(new Paragraph(text))
+    }),
 
     // This is a statement which is indented to the level of the current parse
     // state. It's called RestStatement because the first statement in a block
