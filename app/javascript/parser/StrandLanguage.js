@@ -15,14 +15,20 @@ function errorMsg(constant, value) {
 }
 
 let knotAutoNameNumber = 0;
-function generateKnot(name) {
-  let knotName = name;
-  if (knotName == undefined) {
-    knotAutoNameNumber += 1;
-    knotName = `k_${knotAutoNameNumber}`;
+function getKnotName(name) {
+  if (name != undefined) {
+    return name
   }
 
-  return [["knot", knotName]]
+  knotAutoNameNumber += 1;
+  return `k_${knotAutoNameNumber}`;
+}
+
+function buildKnot({ name } = {}) {
+  return {
+    type: "knot",
+    name: getKnotName(name)
+  }
 }
 
 function token(parser) {
@@ -56,7 +62,7 @@ function StrandLanguage(indent) {
 
     Knot: r => P.regexp(/===\s+(.+)\s+===/, 1).chain(name => {
       if (/^[A-Za-z0-9_]+$/.test(name)) {
-        return P.succeed([["knot", name]])
+        return P.succeed([buildKnot({ name: name })])
       } else {
         return P.fail(errorMsg("INVALID_KNOT_NAME", name))
       }

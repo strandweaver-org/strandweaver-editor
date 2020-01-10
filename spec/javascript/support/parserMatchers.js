@@ -4,21 +4,21 @@ function displayPrettyErrors(res) {
    `
 }
 expect.extend({
-  toBeAKnot(received, name) {
-    if (received && received[0] == "knot") {
+  toBeKnot(received, name) {
+    if (received && received.type == "knot") {
       if (name == undefined) {
         return {
-          message: () => `expected element to not be a knot, but was knot ${received[1]}`,
+          message: () => `expected element to not be a knot, but was knot ${received.name}`,
           pass: true,
         };
-      } else if (name == received[1]) {
+      } else if (name == received.name) {
         return {
-          message: () => `expected element to not be knot ${name}, but it was`,
+          message: () => `expected element to not be knot ${received.name}, but it was`,
           pass: true,
         }
       } else {
         return {
-          message: () => `expected element to be knot ${name}, but it was ${received[1]}`,
+          message: () => `expected element to be knot ${name}, but it was ${received.name}`,
           pass: false,
         }
       }

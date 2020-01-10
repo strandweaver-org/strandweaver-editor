@@ -4,23 +4,30 @@ function parse(text) {
   return StrandLanguage.Statement.parse(text);
 }
 
-it("given a knot with extra whitespace", () => {
-  const res = parse(`=== opening_door === `);
+describe("named knots", () => {
+  it("given a knot with extra whitespace", () => {
+    const res = parse(`=== opening_door === `);
 
-  expect(res).toBeAValidScript();
-  expect(res.value[0]).toBeAKnot("opening_door")
-});
+    expect(res).toBeAValidScript();
+    expect(res.value[0]).toBeKnot("opening_door")
+  });
 
-it("given a knot", () => {
-  const res = parse(`=== opening_door ===\n`);
+  it("given a knot", () => {
+    const res = parse(`=== opening_door ===\n`);
 
-  expect(res).toBeAValidScript();
-  expect(res.value[0]).toBeAKnot("opening_door")
-});
+    expect(res).toBeAValidScript();
+    expect(res.value[0]).toBeKnot("opening_door")
+  });
 
-it("given a knot with an invalid name", () => {
-  const res = parse(`=== Boop Beep === `);
-  expect(res).not.toBeAValidScript();
-  expect(res).toContainScriptError("INVALID_KNOT_NAME");
+  it("given a knot with an invalid name", () => {
+    const res = parse(`=== Boop Beep === `);
+    expect(res).not.toBeAValidScript();
+    expect(res).toContainScriptError("INVALID_KNOT_NAME");
+
+  })
+
+})
+
+describe('single line comments', () => {
 
 })
