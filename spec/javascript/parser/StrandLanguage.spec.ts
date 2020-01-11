@@ -30,6 +30,41 @@ describe("named knots", () => {
 
 })
 
+describe('tags', () => {
+  it("an inline tag", () => {
+    const res = parse(`Text test # beep`);
+    expect(res).toBeAValidScript();
+    const success = res as P.Success<any>;
+    expect(success.value[0]).toBeAnElementOfType("Paragraph");
+    expect(success.value[1]).toBeAnElementOfType("Tag");
+
+  })
+
+  it("a tag after a knot", () => {
+    const res = parse(`=== knotname ==
+ # boop`);
+    expect(res).toBeAValidScript();
+    const success = res as P.Success<any>;
+    expect(success.value[0]).toBeAnElementOfType("Paragraph");
+    expect(success.value[1]).toBeAnElementOfType("Tag");
+
+  })
+
+})
+
+
+describe('inline comments', () => {
+  it("an inline works", () => {
+    const res = parse(`Text test // beep`);
+    expect(res).toBeAValidScript();
+    const success = res as P.Success<any>;
+    expect(success.value[0]).toBeAnElementOfType("Paragraph");
+    expect(success.value[1]).toBeAnElementOfType("Comment");
+
+  })
+
+})
+
 describe('single line comments', () => {
   it("a comment and a knot work", () => {
     const res = parse(`=== first_knot ===

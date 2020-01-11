@@ -1,5 +1,6 @@
 import * as P from "parsimmon";
 import { Knot, Paragraph, Comment } from "./Elements"
+import Tag from "./Elements/Tag";
 
 const PARSER_ERRORS = {
   INVALID_KNOT_NAME: (v: string) => `${v} is an invalid knot name.\nKnot names must be only letters, numbers, and an underscore`
@@ -42,7 +43,7 @@ function StrandLanguage(indent: number): P.Language {
 
     // This is just a statement in our language. To simplify, this is either a
     // block of code or just an identifier
-    Statement: r => P.alt(r.Knot, r.Comment, r.Paragraph),
+    Statement: r => P.alt(r.Knot, r.Tag, r.Comment, r.Paragraph),
     Script: r => r.Statement.many(),
 
     Knot: r => P.regexp(/===[ ]+(.+)[ ]+===/, 1).chain(name => {
@@ -54,15 +55,20 @@ function StrandLanguage(indent: number): P.Language {
     }).thru(token),
 
     Paragraph: r =>
-      P.seqObj(
-        ["text" as never, P.regexp(/[^#]+/) as P.Parser<never>],
-        // tags
-        // comment
-        r.End
-      ).chain(args => {
-        const { text } = args as any;
-        return P.succeed(new Paragraph(text));
-      }).thru(token),
+      P.alt(
+        P.regexp(/([^\n\r]+?)\s*(?=(#\s*[^\n\r]*|\/\/[^\n\r]*|\<\>))/),
+        P.regexp(/.+/)
+      )
+        .chain(text => {
+          return P.succeed(new Paragraph(text));
+        }).thru(token),
+
+
+    Tag: r =>
+      P.regexp(/#\s+([^#\n\r]+)/)
+        .chain(text => {
+          return P.succeed(new Tag(text));
+        }),
 
     // This is a statement which is indented to the level of the current parse
     // state. It's called RestStatement because the first statement in a block
