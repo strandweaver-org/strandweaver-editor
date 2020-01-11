@@ -41,11 +41,11 @@ describe('tags', () => {
   })
 
   it("a tag after a knot", () => {
-    const res = parse(`=== knotname ==
+    const res = parse(`=== knotname ===
  # boop`);
     expect(res).toBeAValidScript();
     const success = res as P.Success<any>;
-    expect(success.value[0]).toBeAnElementOfType("Paragraph");
+    expect(success.value[0]).toBeAnElementOfType("Knot");
     expect(success.value[1]).toBeAnElementOfType("Tag");
 
   })
