@@ -32,13 +32,27 @@ describe("named knots", () => {
 
 describe('tags', () => {
   it("an inline tag", () => {
-    const res = parse(`Text test # beep`);
+    const res = parse(`Text test # beep `);
     expect(res).toBeAValidScript();
     const success = res as P.Success<any>;
     expect(success.value[0]).toBeAnElementOfType("Paragraph");
     expect(success.value[1]).toBeAnElementOfType("Tag");
+    expect(success.value[1].value).toBe('beep')
 
   })
+
+  it("handles multiple tags", () => {
+    const res = parse(`Text test # beep # boop `);
+    expect(res).toBeAValidScript();
+    const success = res as P.Success<any>;
+    expect(success.value[0]).toBeAnElementOfType("Paragraph");
+    expect(success.value[1]).toBeAnElementOfType("Tag");
+    expect(success.value[1].value).toBe('beep')
+    expect(success.value[2]).toBeAnElementOfType("Tag");
+    expect(success.value[2].value).toBe('boop')
+
+  })
+
 
   it("a tag after a knot", () => {
     const res = parse(`=== knotname ===

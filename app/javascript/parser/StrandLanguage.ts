@@ -65,9 +65,9 @@ function StrandLanguage(indent: number): P.Language {
 
 
     Tag: r =>
-      P.regexp(/#\s+([^#\n\r]+)/)
-        .chain(text => {
-          return P.succeed(new Tag(text));
+      P.regex(/#\s+([^#\n\r]+)/, 1)
+        .chain(val => {
+          return P.succeed(new Tag(val.trim()));
         }),
 
     // This is a statement which is indented to the level of the current parse

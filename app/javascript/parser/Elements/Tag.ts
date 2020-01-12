@@ -2,11 +2,11 @@ import Element from './Element'
 
 export default class Tag extends Element {
 
-  public text: string;
+  public value: string;
 
-  constructor(text: string) {
+  constructor(value: string) {
     super()
-    this.text = text
+    this.value = value
   }
 
   getType(): string {
