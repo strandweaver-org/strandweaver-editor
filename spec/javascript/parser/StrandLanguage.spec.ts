@@ -1,10 +1,10 @@
 // import StrandLanguage from "../../../app/javascript/parser/StrandLanguage"
 // TODO: currnetly including spec files in the webpack
-import StrandLanguage from "@App/parser/StrandLanguage";
+import StrandParser from "@App/language/StrandParser";
 import * as P from 'parsimmon';
 
 function parse(text): P.Result<any> {
-  return StrandLanguage.Script.parse(text);
+  return StrandParser.Script.parse(text);
 }
 
 describe("named knots", () => {

@@ -1,4 +1,4 @@
-import { Element, Knot } from "@App/parser/Elements"
+import { Element, Knot } from "@App/language/Elements"
 import * as P from 'parsimmon';
 
 function displayPrettyErrors(failure: P.Failure) {
