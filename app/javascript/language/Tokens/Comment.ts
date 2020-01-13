@@ -1,6 +1,6 @@
-import Element from './Element'
+import Token from './Token'
 
-export default class Comment extends Element {
+export default class Comment extends Token {
 
   public text: string
 

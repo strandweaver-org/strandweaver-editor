@@ -2,20 +2,6 @@ import * as P from "parsimmon";
 import { Knot, Paragraph, Comment } from "./Tokens"
 import Tag from "./Tokens/Tag";
 
-const PARSER_ERRORS = {
-  INVALID_KNOT_NAME: (v: string) => `${v} is an invalid knot name.\nKnot names must be only letters, numbers, and an underscore`
-}
-
-function errorMsg(constant: string, value: string) {
-  const errorGen = PARSER_ERRORS[constant];
-
-  if (errorGen) {
-    return `${constant}: ${errorGen(value)}`
-  } else {
-    return `INVALID_ERROR_TYPE: Error type ${constant}`
-  }
-}
-
 function token(parser: P.Parser<any>) {
   return parser.skip(P.optWhitespace)
 }
@@ -116,6 +102,6 @@ function StrandLanguage(indent: number): P.Language {
 }
 
 // Start parsing at zero indentation
-const StrandParser = StrandLanguage(0);
+const Parser = StrandLanguage(0);
 
-export default StrandParser;
+export default Parser;

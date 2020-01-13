@@ -1,6 +1,6 @@
-import Element from './Element'
+import Token from './Token'
 
-export default class Knot extends Element {
+export default class Knot extends Token {
   static knotNameCounter = 0;
   public name: string;
 

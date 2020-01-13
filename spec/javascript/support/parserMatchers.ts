@@ -1,4 +1,4 @@
-import { Element, Knot } from "@App/language/Tokens"
+import { Token, Knot } from "@App/language/Tokens"
 import * as P from 'parsimmon';
 
 function displayPrettyErrors(failure: P.Failure) {
@@ -7,10 +7,10 @@ function displayPrettyErrors(failure: P.Failure) {
    `
 }
 expect.extend({
-  toBeAnElementOfType(received: Element, type: string) {
+  toBeAnTokenOfType(received: Token, type: string) {
     if (received == null) {
       return {
-        message: () => `expected an element of type ${type}, but was null`,
+        message: () => `expected an token of type ${type}, but was null`,
         pass: false,
       }
 
@@ -19,54 +19,54 @@ expect.extend({
     const receivedType: string = received.getType();
     if (receivedType != type) {
       return {
-        message: () => `expected an element of type ${type}, but received an element of ${receivedType}`,
+        message: () => `expected an token of type ${type}, but received an token of ${receivedType}`,
         pass: false,
       }
     }
 
     return {
-      message: () => `expected to not get an element of type ${type}, but did `,
+      message: () => `expected to not get an token of type ${type}, but did `,
       pass: true
     }
   },
-  toBeAKnotWithName(received: Element | null, name: string) {
+  toBeAKnotWithName(received: Token | null, name: string) {
     if (received == null) {
       return {
-        message: () => `expected element to be a knot, but was null`,
+        message: () => `expected token to be a knot, but was null`,
         pass: false,
       }
     }
 
     if ((received as Knot).name == name) {
       return {
-        message: () => `expected element to not be knot ${name}, but it was`,
+        message: () => `expected token to not be knot ${name}, but it was`,
         pass: true,
       };
     }
 
     return {
-      message: () => `expected element to be a knot with name ${name}, but it was ${received} instead`,
+      message: () => `expected token to be a knot with name ${name}, but it was ${received} instead`,
       pass: false,
     }
 
   },
-  toBeAKnot(received: Element | null) {
+  toBeAKnot(received: Token | null) {
     if (received == null) {
       return {
-        message: () => `expected element to be a knot, but was null`,
+        message: () => `expected token to be a knot, but was null`,
         pass: false,
       }
     }
 
     if (received as Knot) {
       return {
-        message: () => `expected element to not be a knot, but was knot ${(received as Knot).name} `,
+        message: () => `expected token to not be a knot, but was knot ${(received as Knot).name} `,
         pass: true,
       };
     }
 
     return {
-      message: () => `expected element to be a knot, but it was ${received.constructor.name} `,
+      message: () => `expected token to be a knot, but it was ${received.constructor.name} `,
       pass: false,
     }
   },

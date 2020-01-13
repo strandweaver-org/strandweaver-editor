@@ -1,6 +1,6 @@
-import Element from './Element'
+import Token from './Token'
 
-export default class Paragraph extends Element {
+export default class Paragraph extends Token {
 
   public text: string;
 

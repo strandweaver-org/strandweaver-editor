@@ -1,6 +1,6 @@
-import Element from './Element'
+import Token from './Token'
 
-export default class Tag extends Element {
+export default class Tag extends Token {
 
   public value: string;
 
