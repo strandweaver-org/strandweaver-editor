@@ -3,7 +3,8 @@ declare namespace jest {
     toBeAKnot(): R;
     toBeAKnotWithName(name: string): R;
     toBeATokenOfType(type: string): R;
-    toBeAValidScript(): R;
-    toContainScriptError(constant: string): R;
+    toParseCorrectly(): R;
+    toHaveNoCompilationErrors(): R;
+    toContainCompilationError(constant: string): R;
   }
 }

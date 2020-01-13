@@ -1,6 +1,6 @@
-import BaseToken from './BaseToken'
+import BaseElement from './BaseElement'
 
-export default class Knot extends BaseToken {
+export default class Knot extends BaseElement {
   static knotNameCounter = 0;
   public name: string;
 

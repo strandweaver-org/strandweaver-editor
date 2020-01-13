@@ -1,4 +1,4 @@
-import { Token, Knot } from "@App/language/Tokens"
+import * as tokens from "@App/language/Tokens"
 import * as P from 'parsimmon';
 
 function displayPrettyErrors(failure: P.Failure) {
@@ -7,7 +7,7 @@ function displayPrettyErrors(failure: P.Failure) {
    `
 }
 expect.extend({
-  toBeAnTokenOfType(received: Token, type: string) {
+  toBeATokenOfType(received: tokens.BaseToken, type: string) {
     if (received == null) {
       return {
         message: () => `expected an token of type ${type}, but was null`,
@@ -29,7 +29,7 @@ expect.extend({
       pass: true
     }
   },
-  toBeAKnotWithName(received: Token | null, name: string) {
+  toBeAKnotWithName(received: tokens.BaseToken | null, name: string) {
     if (received == null) {
       return {
         message: () => `expected token to be a knot, but was null`,
@@ -37,7 +37,7 @@ expect.extend({
       }
     }
 
-    if ((received as Knot).name == name) {
+    if ((received as tokens.Knot).name == name) {
       return {
         message: () => `expected token to not be knot ${name}, but it was`,
         pass: true,
@@ -50,7 +50,7 @@ expect.extend({
     }
 
   },
-  toBeAKnot(received: Token | null) {
+  toBeAKnot(received: tokens.BaseToken | null) {
     if (received == null) {
       return {
         message: () => `expected token to be a knot, but was null`,
@@ -58,9 +58,9 @@ expect.extend({
       }
     }
 
-    if (received as Knot) {
+    if (received as tokens.Knot) {
       return {
-        message: () => `expected token to not be a knot, but was knot ${(received as Knot).name} `,
+        message: () => `expected token to not be a knot, but was knot ${(received as tokens.Knot).name} `,
         pass: true,
       };
     }
@@ -70,7 +70,7 @@ expect.extend({
       pass: false,
     }
   },
-  toBeAValidScript(received: P.Result<any>) {
+  toParseCorrectly(received: P.Result<any>) {
     if (received.status == false) {
       return {
         message: () => `expected script to have no errors, but had errors:
@@ -85,34 +85,5 @@ expect.extend({
         `expected script to have errors, but had no errors.`,
       pass: true,
     };
-  },
-  toContainScriptError(received: P.Result<any>, constant: string) {
-    if (received.status == true) {
-      return {
-        message: () =>
-          `expected script to have errors, but had no errors.`,
-        pass: true,
-      };
-    } else {
-      const matchingErrors = received.expected.filter(msg =>
-        msg.startsWith(constant));
-
-
-      if (matchingErrors.length >= 0) {
-        return {
-          message: () => `
-      expected script to have no errors of type ${ constant}, but found matching errors:
-      ${ displayPrettyErrors(received)} `,
-          pass: true,
-        };
-      } else {
-        return {
-          message: () => `
-      expected script to have errors of type ${ constant}, but no matches were found:
-      ${ displayPrettyErrors(received)} `,
-          pass: false,
-        };
-      }
-    }
-  },
+  }
 });

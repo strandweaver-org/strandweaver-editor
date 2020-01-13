@@ -1,4 +1,11 @@
-import { Token } from "@App/language/Tokens"
+import * as tokens from "@App/language/Tokens"
+import * as elements from "@App/language/Elements"
+
+export interface ICompilerResponse {
+  success: boolean
+  elements: Element[]
+  errors: string[]
+}
 
 const COMPILER_ERRORS = {
   INVALID_KNOT_NAME: (v: string) => `${v} is an invalid knot name.\nKnot names must be only letters, numbers, and an underscore`
@@ -14,8 +21,15 @@ function errorMsg(constant: string, value: string) {
   }
 }
 
-export default class Compiler {
-  constructor(Element[]) {
+export default function compileTokens(tokens: tokens.BaseToken[]): ICompilerResponse {
+  const currentKnot: null = null
+  const beginningAddress: string | null = null
 
+  return {
+    success: true,
+    elements: [],
+    errors: []
   }
+
+
 }

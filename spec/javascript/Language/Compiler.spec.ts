@@ -1,5 +1,10 @@
-import { Knot, Comment, Paragraph } from "@App/language/Tokens"
+import * as tokens from "@App/language/Tokens"
+import compileTokens, { ICompilerResponse } from "@App/language/Compiler"
 
-it('test case', () => {
-  expect(1 + 1).toBe(2)
+it('with a simple program', () => {
+  const res = compileTokens([
+    new tokens.Knot("start")
+  ])
+
+  expect(res).toHaveNoCompilationErrors();
 })

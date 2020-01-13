@@ -1,6 +1,6 @@
-import Token from './Token'
+import BaseToken from './BaseToken'
 
-export default class Comment extends Token {
+export default class Comment extends BaseToken {
 
   public text: string
 

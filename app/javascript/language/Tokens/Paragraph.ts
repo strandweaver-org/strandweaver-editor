@@ -1,6 +1,6 @@
-import Token from './Token'
+import BaseToken from './BaseToken'
 
-export default class Paragraph extends Token {
+export default class Paragraph extends BaseToken {
 
   public text: string;
 
