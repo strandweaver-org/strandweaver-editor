@@ -1,6 +1,6 @@
 import * as P from "parsimmon";
-import { Knot, Paragraph, Comment } from "./Elements"
-import Tag from "./Elements/Tag";
+import { Knot, Paragraph, Comment } from "./Tokens"
+import Tag from "./Tokens/Tag";
 
 const PARSER_ERRORS = {
   INVALID_KNOT_NAME: (v: string) => `${v} is an invalid knot name.\nKnot names must be only letters, numbers, and an underscore`
