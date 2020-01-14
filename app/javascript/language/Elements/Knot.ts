@@ -12,12 +12,7 @@ export default class Knot extends BaseElement {
   }
 
   constructor(name?: string) {
-    super()
+    super('Knot')
     this.name = name == undefined ? Knot.generateKnotName() : name;
-
-  }
-
-  getType(): string {
-    return 'Knot';
   }
 }

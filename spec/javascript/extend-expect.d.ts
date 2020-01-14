@@ -5,6 +5,7 @@ declare namespace jest {
     toBeATokenOfType(type: string): R;
     toParseCorrectly(): R;
     toHaveNoCompilationErrors(): R;
+    toHaveElementValue(index: number, property: string, value: string): R;
     toContainCompilationError(constant: string): R;
   }
 }

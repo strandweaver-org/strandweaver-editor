@@ -6,5 +6,5 @@ it('with a simple program', () => {
     new tokens.Knot("start")
   ])
 
-  expect(res).toHaveNoCompilationErrors();
+  expect(res).toHaveElementValue(0, "type", "Knot")
 })

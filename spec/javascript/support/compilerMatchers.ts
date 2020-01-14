@@ -5,6 +5,50 @@ function displayPrettyErrors(res: ICompilerResponse) {
 }
 
 expect.extend({
+  toHaveElementValue(res: ICompilerResponse, index: number, propertyName: string, expectedValue: string) {
+    const expectedValueMsg = `expected element #${index}'s ${propertyName} to be ${expectedValue}`
+    if (res.success == false) {
+      return {
+        message: () => `${expectedValueMsg}, 
+          but there were compilation errors ${displayPrettyErrors(res)}`,
+        pass: false
+      }
+    }
+
+    const element = res.elements[index]
+    if (element == undefined) {
+      return {
+        message: () => `${expectedValueMsg}, but there was no element at index ${index}`,
+        pass: false
+      }
+    }
+
+    const property = element[propertyName];
+    if (property == undefined && expectedValue != undefined) {
+      return {
+        message: () => `${expectedValueMsg}, but there was no property ${propertyName}`,
+        pass: false
+      }
+    }
+
+    // little shortcut so you can pass property "getType" to call getType()
+    const value = (property instanceof Function) ? property() : property;
+
+    if (value != expectedValue) {
+      return {
+        message: () => `${expectedValueMsg}, but found value ${value}`,
+        pass: false
+      }
+    }
+
+
+    return {
+      message: () => `expected element #${index}'s ${propertyName} to not be ${expectedValue}, but it was`,
+      pass: true
+    }
+
+
+  },
   toHaveNoCompilationErrors(res: ICompilerResponse) {
     if (res.success == true) {
       return {
