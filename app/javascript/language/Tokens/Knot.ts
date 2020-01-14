@@ -12,12 +12,8 @@ export default class Knot extends BaseToken {
   }
 
   constructor(name?: string) {
-    super()
+    super('Knot')
     this.name = name == undefined ? Knot.generateKnotName() : name;
 
-  }
-
-  getType(): string {
-    return 'Knot';
   }
 }

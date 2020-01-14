@@ -5,11 +5,7 @@ export default class Tag extends BaseToken {
   public value: string;
 
   constructor(value: string) {
-    super()
+    super('Tag')
     this.value = value
-  }
-
-  getType(): string {
-    return 'Tag';
   }
 }

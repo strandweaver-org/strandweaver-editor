@@ -16,7 +16,7 @@ expect.extend({
 
     }
 
-    const receivedType: string = received.getType();
+    const receivedType: string = received.type;
     if (receivedType != type) {
       return {
         message: () => `expected an token of type ${type}, but received an token of ${receivedType}`,

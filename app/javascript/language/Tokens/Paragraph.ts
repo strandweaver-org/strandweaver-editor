@@ -5,11 +5,7 @@ export default class Paragraph extends BaseToken {
   public text: string;
 
   constructor(text: string) {
-    super()
+    super('Paragraph')
     this.text = text
-  }
-
-  getType(): string {
-    return 'Paragraph';
   }
 }

@@ -1,3 +1,7 @@
 export default abstract class BaseToken {
-  public abstract getType(): string;
+  public type: string
+
+  constructor(type: string) {
+    this.type = type;
+  }
 }

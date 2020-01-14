@@ -3,7 +3,7 @@ import * as elements from "@App/language/Elements"
 
 export interface ICompilerResponse {
   success: boolean
-  elements: Element[]
+  elements: elements.BaseElement[]
   errors: string[]
 }
 
@@ -22,8 +22,20 @@ function errorMsg(constant: string, value: string) {
 }
 
 export default function compileTokens(tokens: tokens.BaseToken[]): ICompilerResponse {
-  const currentKnot: null = null
+  const currentElement: null = null
   const beginningAddress: string | null = null
+  let tokenIndex: number = 0;
+  let currentToken: tokens.BaseToken = null;
+  const tokenLength: number = tokens.length
+
+  while (tokenIndex < tokens.length) {
+    currentToken = tokens[tokenIndex];
+
+    if (currentToken.type == "Knot") {
+    }
+
+    tokenIndex += 1
+  }
 
   return {
     success: true,

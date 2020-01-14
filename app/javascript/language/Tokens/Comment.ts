@@ -5,11 +5,7 @@ export default class Comment extends BaseToken {
   public text: string
 
   constructor(text: string) {
-    super()
+    super('Comment')
     this.text = text
-  }
-
-  public getType(): string {
-    return 'Comment';
   }
 }
