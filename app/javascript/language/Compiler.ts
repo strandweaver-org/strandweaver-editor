@@ -22,26 +22,62 @@ function errorMsg(constant: string, value: string) {
 }
 
 export default function compileTokens(tokens: tokens.BaseToken[]): ICompilerResponse {
-  const currentElement: null = null
-  const beginningAddress: string | null = null
+  let currentKnot: elements.Knot | null = null
+  let beginningAddress: string | null = null
   let tokenIndex: number = 0;
   let currentToken: tokens.BaseToken = null;
+  let currentDisplayElement: elements.BaseElement | null = null;
+
+  const response: ICompilerResponse = {
+    success: true,
+    errors: [],
+    elements: []
+  }
   const tokenLength: number = tokens.length
+
+  function wrapupCurrentKnot() {
+    if (currentKnot == null) {
+      return;
+    }
+    response.elements.push(currentKnot);
+  }
+
+  function setCurrentKnot() {
+    wrapupCurrentKnot();
+    currentKnot = new elements.Knot((currentToken as tokens.Knot).name)
+    currentDisplayElement = currentKnot;
+
+
+    if (beginningAddress == null) {
+      beginningAddress = currentKnot.name
+    }
+  }
+
+  function addTag() {
+    if (currentDisplayElement.type == "Knot") {
+      currentDisplayElement.addTag((currentToken as tokens.Tag).value)
+    }
+  }
 
   while (tokenIndex < tokens.length) {
     currentToken = tokens[tokenIndex];
 
-    if (currentToken.type == "Knot") {
+    switch (currentToken.type) {
+      case "Knot":
+        setCurrentKnot();
+        break;
+
+      case "Tag":
+        addTag();
+        break;
+
     }
 
     tokenIndex += 1
   }
 
-  return {
-    success: true,
-    elements: [],
-    errors: []
-  }
+  wrapupCurrentKnot();
+  return response;
 
 
 }

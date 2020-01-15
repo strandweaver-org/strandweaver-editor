@@ -1,8 +1,8 @@
 Arguments: 
-  /usr/local/Cellar/node@10/10.17.0/bin/node /Users/jstuart/.yarn/bin/yarn.js test --watch
+  /usr/local/Cellar/node@10/10.17.0/bin/node /Users/jstuart/.yarn/bin/yarn.js add --dev @types/fast-deep-equal
 
 PATH: 
-  /usr/local/opt/node@10/bin:/usr/local/sbin:/Users/jstuart/.yarn/bin:/Users/jstuart/.rbenv/shims:/Users/jstuart/.rbenv/shims:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/jstuart/.rbenv/versions/2.6.5/bin:/usr/local/Cellar/rbenv/1.1.2/libexec
+  /usr/local/opt/node@10/bin:/usr/local/sbin:/Users/jstuart/.yarn/bin:/Users/jstuart/.rbenv/shims:/Users/jstuart/.rbenv/shims:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
 
 Yarn version: 
   1.21.1
@@ -14,12 +14,17 @@ Platform:
   darwin x64
 
 Trace: 
-  SyntaxError: /Users/jstuart/code/strandweaver-editor/package.json: Unexpected token } in JSON at position 1582
-      at JSON.parse (<anonymous>)
-      at /Users/jstuart/.yarn/lib/cli.js:1625:59
-      at Generator.next (<anonymous>)
-      at step (/Users/jstuart/.yarn/lib/cli.js:310:30)
-      at /Users/jstuart/.yarn/lib/cli.js:321:13
+  Error: https://registry.yarnpkg.com/@types%2ffast-deep-equal: Not found
+      at Request.params.callback [as _callback] (/Users/jstuart/.yarn/lib/cli.js:66947:18)
+      at Request.self.callback (/Users/jstuart/.yarn/lib/cli.js:140665:22)
+      at Request.emit (events.js:198:13)
+      at Request.<anonymous> (/Users/jstuart/.yarn/lib/cli.js:141637:10)
+      at Request.emit (events.js:198:13)
+      at IncomingMessage.<anonymous> (/Users/jstuart/.yarn/lib/cli.js:141559:12)
+      at Object.onceWrapper (events.js:286:20)
+      at IncomingMessage.emit (events.js:203:15)
+      at endReadableNT (_stream_readable.js:1143:12)
+      at process._tickCallback (internal/process/next_tick.js:63:19)
 
 npm manifest: 
   {
@@ -38,6 +43,7 @@ npm manifest:
       "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
       "bootstrap": "^4.4.1",
       "easy-peasy": "^3.2.6",
+      "fast-deep-equal": "^3.1.1",
       "parsimmon": "^1.13.0",
       "prop-types": "^15.7.2",
       "react": "^16.12.0",
@@ -67,40 +73,9 @@ npm manifest:
       "jest": "^24.9.0",
       "prettier": "^1.19.1",
       "ts-jest": "^24.3.0",
+      "tsconfig-paths-jest": "^0.0.1",
       "typescript": "^3.7.4",
       "webpack-dev-server": "^3.10.1"
-    },
-    "jest": {
-      "transform": {
-        "^.+\\.jsx?$": "babel-jest",
-        "^.+\\.tsx?$": "ts-jest"
-      },
-      "paths": {
-        "@App/*": [
-          "app/javascript/*"
-        ],
-      },
-      "globals": {
-        "tsConfig": "tsconfig.json",
-        "ts-jest": {
-          "diagnostics": true
-        }
-      },
-      "roots": [
-        "spec/javascript",
-        "app/javascript"
-      ],
-      "moduleNameMapper": {
-        "^@App/(.*)$": "<rootDir>/app/javascript/$1",
-        "^@Tests/(.*)$": "<rootDir>/spec/javascript/$1"
-      },
-      "moduleDirectories": [
-        "node_modules",
-        "app/javascript"
-      ],
-      "setupFilesAfterEnv": [
-        "<rootDir>/spec/javascript/support/parserMatchers.ts"
-      ]
     }
   }
 
@@ -3781,6 +3756,11 @@ Lockfile:
     version "2.0.1"
     resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-2.0.1.tgz#7b05218ddf9667bf7f370bf7fdb2cb15fdd0aa49"
     integrity sha1-ewUhjd+WZ79/Nwv3/bLLFf3Qqkk=
+  
+  fast-deep-equal@^3.1.1:
+    version "3.1.1"
+    resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-3.1.1.tgz#545145077c501491e33b15ec408c294376e94ae4"
+    integrity sha512-8UEa58QDLauDNfpbrX55Q9jrGHThw2ZMdOky5Gl1CDtVeJDPVrG4Jxx1N8jw2gkWaff5UUuX1KJd+9zGe2B+ZA==
   
   fast-diff@^1.1.2:
     version "1.2.0"
@@ -9475,6 +9455,11 @@ Lockfile:
     version "6.1.5"
     resolved "https://registry.yarnpkg.com/ts-toolbelt/-/ts-toolbelt-6.1.5.tgz#78c159d34cd4a22a256c0a053f66ac63ab317ad9"
     integrity sha512-KXvqFhGie7NS8XKX+6/JypeG7caJaKzXo16eOkGCGxLa2OX44xbmWeuDAkBpIRfEE1XcxVt9H/WmgI2bAlvbIg==
+  
+  tsconfig-paths-jest@^0.0.1:
+    version "0.0.1"
+    resolved "https://registry.yarnpkg.com/tsconfig-paths-jest/-/tsconfig-paths-jest-0.0.1.tgz#a977a5648c434037b69884e644ce1b82bf025b68"
+    integrity sha1-qXelZIxDQDe2mITmRM4bgr8CW2g=
   
   tslib@^1.8.1, tslib@^1.9.0:
     version "1.10.0"

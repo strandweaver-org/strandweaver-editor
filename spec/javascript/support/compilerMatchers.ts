@@ -1,11 +1,12 @@
 import { ICompilerResponse } from "@App/language/Compiler"
+import * as deepEqual from 'fast-deep-equal'
 
 function displayPrettyErrors(res: ICompilerResponse) {
   return res.errors.join("\n")
 }
 
 expect.extend({
-  toHaveElementValue(res: ICompilerResponse, index: number, propertyName: string, expectedValue: string) {
+  toHaveElementValue(res: ICompilerResponse, index: number, propertyName: string, expectedValue: any) {
     const expectedValueMsg = `expected element #${index}'s ${propertyName} to be ${expectedValue}`
     if (res.success == false) {
       return {
@@ -32,12 +33,14 @@ expect.extend({
     }
 
     // little shortcut so you can pass property "getType" to call getType()
-    const value = (property instanceof Function) ? property() : property;
 
-    if (value != expectedValue) {
+    const value = (property instanceof Function) ? property.call(element) : property;
+
+    if (!deepEqual(value, expectedValue)) {
       return {
         message: () => `${expectedValueMsg}, but found value ${value}`,
         pass: false
+
       }
     }
 
