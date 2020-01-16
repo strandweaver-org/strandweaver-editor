@@ -1,11 +1,11 @@
 import BaseToken from './BaseToken'
 
-export default class Tag extends BaseToken {
+export default class InlineTag extends BaseToken {
 
   public value: string;
 
   constructor(value: string) {
-    super('Tag')
+    super('InlineTag')
     this.value = value
   }
 }

@@ -1,5 +1,7 @@
 import * as tokens from "@App/language/Tokens"
 import * as elements from "@App/language/Elements"
+import Parser from "./Parser"
+import * as P from "parsimmon"
 
 export interface ICompilerResponse {
   success: boolean
@@ -21,7 +23,23 @@ function errorMsg(constant: string, value: string) {
   }
 }
 
-export default function compileTokens(tokens: tokens.BaseToken[]): ICompilerResponse {
+export function compileScript(script: string): ICompilerResponse {
+  const res = Parser.Script.parse(script)
+  if (res.status == false) {
+    const failure = (res as P.Failure);
+    return {
+      success: false,
+      elements: [],
+      errors: [`Parsing failed due to ${failure.expected.join("\n")}`]
+    }
+
+  }
+
+  const parseRes: P.Success<any> = (res as P.Success<any>)
+  return compileTokens(parseRes.value)
+}
+
+export function compileTokens(tokens: tokens.BaseToken[]): ICompilerResponse {
   let currentKnot: elements.Knot | null = null
   let beginningAddress: string | null = null
   let tokenIndex: number = 0;
@@ -35,17 +53,10 @@ export default function compileTokens(tokens: tokens.BaseToken[]): ICompilerResp
   }
   const tokenLength: number = tokens.length
 
-  function wrapupCurrentKnot() {
-    if (currentKnot == null) {
-      return;
-    }
-    response.elements.push(currentKnot);
-  }
-
   function setCurrentKnot() {
-    wrapupCurrentKnot();
     currentKnot = new elements.Knot((currentToken as tokens.Knot).name)
     currentDisplayElement = currentKnot;
+    response.elements.push(currentDisplayElement);
 
 
     if (beginningAddress == null) {
@@ -53,9 +64,25 @@ export default function compileTokens(tokens: tokens.BaseToken[]): ICompilerResp
     }
   }
 
-  function addTag() {
-    if (currentDisplayElement.type == "Knot") {
-      currentDisplayElement.addTag((currentToken as tokens.Tag).value)
+  function setCurrentParagraph() {
+    if (currentKnot == null) {
+      currentKnot = new elements.Knot();
+      response.elements.push(currentKnot);
+    }
+
+    currentDisplayElement = new elements.Paragraph((currentToken as tokens.Paragraph).text)
+    response.elements.push(currentDisplayElement);
+  }
+
+  function addInlineTag(): void {
+    switch (currentDisplayElement.type) {
+      case "Knot":
+        currentDisplayElement.addTag((currentToken as tokens.InlineTag).value);
+        break;
+
+      case "Paragraph":
+        currentDisplayElement.addTag((currentToken as tokens.InlineTag).value);
+        break;
     }
   }
 
@@ -67,16 +94,20 @@ export default function compileTokens(tokens: tokens.BaseToken[]): ICompilerResp
         setCurrentKnot();
         break;
 
-      case "Tag":
-        addTag();
+      case "InlineTag":
+        addInlineTag();
         break;
+
+      case "Paragraph":
+        setCurrentParagraph();
+        break;
+
 
     }
 
     tokenIndex += 1
   }
 
-  wrapupCurrentKnot();
   return response;
 
 

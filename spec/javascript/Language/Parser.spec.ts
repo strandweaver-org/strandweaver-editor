@@ -36,7 +36,7 @@ describe('tags', () => {
     expect(res).toParseCorrectly();
     const success = res as P.Success<any>;
     expect(success.value[0]).toBeATokenOfType("Paragraph");
-    expect(success.value[1]).toBeATokenOfType("Tag");
+    expect(success.value[1]).toBeATokenOfType("StandaloneTag");
     expect(success.value[1].value).toBe('beep')
 
   })
@@ -46,9 +46,9 @@ describe('tags', () => {
     expect(res).toParseCorrectly();
     const success = res as P.Success<any>;
     expect(success.value[0]).toBeATokenOfType("Paragraph");
-    expect(success.value[1]).toBeATokenOfType("Tag");
+    expect(success.value[1]).toBeATokenOfType("StandaloneTag");
     expect(success.value[1].value).toBe('beep')
-    expect(success.value[2]).toBeATokenOfType("Tag");
+    expect(success.value[2]).toBeATokenOfType("StandaloneTag");
     expect(success.value[2].value).toBe('boop')
 
   })
@@ -60,7 +60,7 @@ describe('tags', () => {
     expect(res).toParseCorrectly();
     const success = res as P.Success<any>;
     expect(success.value[0]).toBeATokenOfType("Knot");
-    expect(success.value[1]).toBeATokenOfType("Tag");
+    expect(success.value[1]).toBeATokenOfType("StandaloneTag");
 
   })
 
