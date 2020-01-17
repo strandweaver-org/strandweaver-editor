@@ -45,6 +45,7 @@ export function compileTokens(tokens: tokens.BaseToken[]): ICompilerResponse {
   let tokenIndex: number = 0;
   let currentToken: tokens.BaseToken = null;
   let currentDisplayElement: elements.BaseElement | null = null;
+  let currentStandaloneKnotTags: string[] = []
 
   const response: ICompilerResponse = {
     success: true,
@@ -86,6 +87,19 @@ export function compileTokens(tokens: tokens.BaseToken[]): ICompilerResponse {
     }
   }
 
+  function addStandaloneTag(): void {
+    switch (currentDisplayElement.type) {
+      case "Knot":
+        currentDisplayElement.addTag((currentToken as tokens.InlineTag).value);
+        break;
+
+      case "Paragraph":
+        currentDisplayElement.addTag((currentToken as tokens.InlineTag).value);
+        break;
+    }
+  }
+
+
   while (tokenIndex < tokens.length) {
     currentToken = tokens[tokenIndex];
 
@@ -97,6 +111,11 @@ export function compileTokens(tokens: tokens.BaseToken[]): ICompilerResponse {
       case "InlineTag":
         addInlineTag();
         break;
+
+      case "StandaloneTag":
+        addStandaloneTag();
+        break;
+
 
       case "Paragraph":
         setCurrentParagraph();

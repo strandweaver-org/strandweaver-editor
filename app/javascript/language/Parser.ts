@@ -7,6 +7,21 @@ function token(parser: P.Parser<any>) {
 
 function StrandLanguage(indent: number): P.Language {
   return P.createLanguage({
+    IndentedStatement: r =>
+      P.alt(
+        P.seqMap(
+          r.CountSpaces,
+          r.Statement,
+          (spaces, statement) => {
+            statement.indentLevel = spaces;
+            return statement;
+
+          }
+        ),
+        r.Statement
+      ),
+
+    CountSpaces: () => P.regexp(/^\s*/).map(s => s.length),
     Statement: r => P.alt(
       r.Knot,
       r.StandaloneTag,
@@ -14,7 +29,7 @@ function StrandLanguage(indent: number): P.Language {
       r.Comment,
       r.Paragraph
     ),
-    Script: r => r.Statement.many(),
+    Script: r => r.IndentedStatement.many(),
 
     Knot: r => P.regexp(/===[ ]+(.+)[ ]+===/, 1).chain(name => {
       return P.succeed(new tokens.Knot(name))
@@ -31,9 +46,9 @@ function StrandLanguage(indent: number): P.Language {
     Paragraph: r =>
       P.alt(
         P.regexp(/([^\n\r]+?)\s*(?=(#\s*[^\n\r]*|\/\/[^\n\r]*|\<\>))/),
-        P.regexp(/.+/)
+        P.regexp(/[^\n\r]+/)
       )
-        .chain(text => {
+        .chain((text) => {
           return P.succeed(new tokens.Paragraph(text.trim()));
         }).thru(token),
 
