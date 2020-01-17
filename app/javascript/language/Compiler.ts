@@ -2,10 +2,11 @@ import * as tokens from "@App/language/Tokens"
 import * as elements from "@App/language/Elements"
 import Parser from "./Parser"
 import * as P from "parsimmon"
+import Engine from "./Engine"
 
 export interface ICompilerResponse {
   success: boolean
-  elements: elements.BaseElement[]
+  engine: Engine
   errors: string[]
 }
 
@@ -29,7 +30,7 @@ export function compileScript(script: string): ICompilerResponse {
     const failure = (res as P.Failure);
     return {
       success: false,
-      elements: [],
+      engine: new Engine(),
       errors: [`Parsing failed due to ${failure.expected.join("\n")}`]
     }
 
@@ -47,17 +48,18 @@ export function compileTokens(tokens: tokens.BaseToken[]): ICompilerResponse {
   let currentDisplayElement: elements.BaseElement | null = null;
   let currentStandaloneKnotTags: string[] = []
 
+
   const response: ICompilerResponse = {
     success: true,
     errors: [],
-    elements: []
+    engine: new Engine()
   }
   const tokenLength: number = tokens.length
 
   function setCurrentKnot() {
     currentKnot = new elements.Knot((currentToken as tokens.Knot).name)
     currentDisplayElement = currentKnot;
-    response.elements.push(currentDisplayElement);
+    response.engine.addElement(currentDisplayElement);
 
 
     if (beginningAddress == null) {
@@ -68,11 +70,11 @@ export function compileTokens(tokens: tokens.BaseToken[]): ICompilerResponse {
   function setCurrentParagraph() {
     if (currentKnot == null) {
       currentKnot = new elements.Knot();
-      response.elements.push(currentKnot);
+      response.engine.addElement(currentKnot);
     }
 
     currentDisplayElement = new elements.Paragraph((currentToken as tokens.Paragraph).text)
-    response.elements.push(currentDisplayElement);
+    response.engine.addElement(currentDisplayElement);
   }
 
   function addInlineTag(): void {

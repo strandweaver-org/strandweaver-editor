@@ -16,7 +16,7 @@ expect.extend({
       }
     }
 
-    const element = res.elements[index]
+    const element = res.engine.elementList[index]
     if (element == undefined) {
       return {
         message: () => `${expectedValueMsg}, but there was no element at index ${index}`,
