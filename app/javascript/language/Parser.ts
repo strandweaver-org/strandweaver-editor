@@ -27,9 +27,14 @@ function StrandLanguage(indent: number): P.Language {
       r.StandaloneTag,
       r.InlineTag,
       r.Comment,
+      r.Jump,
       r.Paragraph
     ),
     Script: r => r.IndentedStatement.many(),
+
+    Jump: r => P.regexp(/->\s*([A-Za-z0-9_]+)/, 1).chain(location => {
+      return P.succeed(new tokens.Jump(location))
+    }).thru(token),
 
     Knot: r => P.regexp(/===[ ]+(.+)[ ]+===/, 1).chain(name => {
       return P.succeed(new tokens.Knot(name))
