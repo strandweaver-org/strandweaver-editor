@@ -8,7 +8,7 @@ describe('inline tags', () => {
       new tokens.InlineTag("ominous")
     ])
 
-    expect(res).toHaveNoCompilationErrors();
+    expect(res).toCompileSuccessfully();
     expect(res).toHaveElementValue(0, "getTags", ["ominous"])
   })
 
@@ -63,7 +63,7 @@ describe('standalone tags', () => {
       new tokens.StandaloneTag("ominous")
     ])
 
-    expect(res).toHaveNoCompilationErrors();
+    expect(res).toCompileSuccessfully();
     expect(res).toHaveElementValue(0, "getTags", ["ominous"])
   })
 

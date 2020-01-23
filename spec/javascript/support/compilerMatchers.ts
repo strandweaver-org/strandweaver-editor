@@ -1,8 +1,10 @@
-import { ICompilerResponse } from "@App/language/Compiler"
+import { ICompilerMessage, ICompilerResponse } from "@App/language/Compiler"
 import * as deepEqual from 'fast-deep-equal'
 
-function displayPrettyErrors(res: ICompilerResponse) {
-  return res.errors.join("\n")
+function prettyPrintMessages(messages: ICompilerMessage[]): string {
+  return messages.map((msg: ICompilerMessage) => {
+    return `[${msg.category}] ${msg.type}: ${msg.text}`
+  }).join("\n")
 }
 
 expect.extend({
@@ -11,7 +13,7 @@ expect.extend({
     if (res.success == false) {
       return {
         message: () => `${expectedValueMsg}, 
-          but there were compilation errors ${displayPrettyErrors(res)}`,
+          but there were compilation problems:\n${prettyPrintMessages(res.messages)}`,
         pass: false
       }
     }
@@ -49,14 +51,12 @@ expect.extend({
       message: () => `expected element #${index}'s ${propertyName} to not be ${expectedValue}, but it was`,
       pass: true
     }
-
-
   },
-  toHaveNoCompilationErrors(res: ICompilerResponse) {
+  toHaveNoCompilationMessages(res: ICompilerResponse) {
     if (res.success == true) {
       return {
-        message: () => `expected the compilation to have no errors, but had errors:
-      ${ displayPrettyErrors(res)} `,
+        message: () => `expected the compilation to have no errors or warnings, but had:
+      ${ prettyPrintMessages(res.messages)} `,
         pass: true,
       };
 
@@ -64,34 +64,49 @@ expect.extend({
 
     return {
       message: () =>
-        `expected script to have errors, but had no errors.`,
+        `expected script to have compilation messages, but had no messages.`,
+      pass: false,
+    };
+
+  },
+  toCompileSuccessfully(res: ICompilerResponse) {
+    if (res.success == true) {
+      return {
+        message: () => `expected the compilation to work, but had errors:
+      ${ prettyPrintMessages(res.messages)} `,
+        pass: true,
+      };
+
+    }
+
+    return {
+      message: () =>
+        `expected script to not work, but it compiled successfully`,
       pass: false,
     };
   },
-  toContainCompilationError(res: ICompilerResponse, constant: string) {
+  toContainCompilationMessageOfType(res: ICompilerResponse, type: string) {
     if (res.success == true) {
       return {
         message: () =>
-          `expected script to have errors, but had no errors.`,
-        pass: true,
+          `expected script to have messages of type ${type}, but had no messages.`,
+        pass: false,
       };
     } else {
-      const matchingErrors = res.errors.filter(msg =>
-        msg.startsWith(constant));
+      const matchingMessages: ICompilerMessage[] = res.messages.filter(msg => msg.type === type)
 
-
-      if (matchingErrors.length >= 0) {
+      if (matchingMessages.length > 0) {
         return {
           message: () => `
-      expected script to have no errors of type ${constant}, but found matching errors:
-      ${ displayPrettyErrors(res)} `,
+      expected script to have no messages of type ${type}, but found matching messages:
+      ${ prettyPrintMessages(matchingMessages)} `,
           pass: true,
         };
       } else {
         return {
           message: () => `
-      expected script to have errors of type ${ constant}, but no matches were found:
-      ${ displayPrettyErrors(res)} `,
+      expected script to have messages of type ${type}, but no matches were found:
+      ${ prettyPrintMessages(matchingMessages)} `,
           pass: false,
         };
       }

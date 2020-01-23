@@ -4,24 +4,24 @@ import Parser from "./Parser"
 import * as P from "parsimmon"
 import Engine from "./Engine"
 
+export interface ICompilerMessage {
+  category: string;
+  type: string;
+  text: string;
+}
+
 export interface ICompilerResponse {
-  success: boolean
-  engine: Engine
-  errors: string[]
+  success: boolean;
+  engine?: Engine;
+  messages: ICompilerMessage[];
 }
 
-const COMPILER_ERRORS = {
-  INVALID_KNOT_NAME: (v: string) => `${v} is an invalid knot name.\nKnot names must be only letters, numbers, and an underscore`
-}
+export const validKnotNameRegex = /^[A-Za-z][A-Za-z_0-9]*$/
 
-function errorMsg(constant: string, value: string) {
-  const errorGen = COMPILER_ERRORS[constant];
-
-  if (errorGen) {
-    return `${constant}: ${errorGen(value)}`
-  } else {
-    return `INVALID_ERROR_TYPE: Error type ${constant}`
-  }
+const COMPILER_MESSAGES = {
+  INVALID_KNOT_NAME: ['error', (v: string) => `${v} is an invalid knot name.\nKnot names must start with a letter and contain only letters, numbers, and underscores`],
+  KNOT_CANNOT_BE_DONE: ['error', (v: string) => `The knot name DONE is reserved for ending a story.`],
+  JUMP_LOCATION_NOT_FOUND: ['error', (v: string) => `Attempt to jump to a location ${v} that was not specified.`]
 }
 
 export function compileScript(script: string): ICompilerResponse {
@@ -30,8 +30,12 @@ export function compileScript(script: string): ICompilerResponse {
     const failure = (res as P.Failure);
     return {
       success: false,
-      engine: new Engine(),
-      errors: [`Parsing failed due to ${failure.expected.join("\n")}`]
+      messages: [
+        {
+          category: 'error', type: "PARSING_FAILED",
+          text: `Parsing failed due to ${failure.expected.join("\n")}`
+        }
+      ]
     }
 
   }
@@ -48,15 +52,49 @@ export function compileTokens(tokens: tokens.BaseToken[]): ICompilerResponse {
   let currentDisplayElement: elements.BaseElement | null = null;
   let currentStandaloneKnotTags: string[] = []
 
+  function addMessage(messageType: string, value: string | null): void {
+    const [category, messageGen] = COMPILER_MESSAGES[messageType];
+
+    if (category) {
+      response.messages.push({
+        category,
+        type: messageType,
+        text: messageGen(value || "")
+      })
+
+    } else {
+      response.messages.push({
+        category: 'error',
+        type: 'INVALID_ERROR_TYPE',
+        text: `An error of type ${messageType} was requested, but not found`
+
+      })
+    }
+
+    if (category === "error") {
+      response.success = false
+    }
+  }
 
   const response: ICompilerResponse = {
     success: true,
-    errors: [],
+    messages: [],
     engine: new Engine()
   }
   const tokenLength: number = tokens.length
 
-  function setCurrentKnot() {
+  function setCurrentKnot(): void {
+    const knotName: string = (currentToken as tokens.Knot).name;
+    if (!validKnotNameRegex.test(knotName)) {
+      addMessage("INVALID_KNOT_NAME", knotName);
+      return
+    }
+
+    if (knotName.toUpperCase() == "DONE") {
+      addMessage("KNOT_CANNOT_BE_DONE", knotName);
+      return
+    }
+
     currentKnot = new elements.Knot((currentToken as tokens.Knot).name)
     currentDisplayElement = currentKnot;
     response.engine.addElement(currentDisplayElement);
@@ -89,6 +127,10 @@ export function compileTokens(tokens: tokens.BaseToken[]): ICompilerResponse {
     }
   }
 
+  function addJump(): void {
+    response.engine.addElement(new elements.Jump((currentToken as tokens.Jump).location))
+  }
+
   function addStandaloneTag(): void {
     switch (currentDisplayElement.type) {
       case "Knot":
@@ -101,8 +143,26 @@ export function compileTokens(tokens: tokens.BaseToken[]): ICompilerResponse {
     }
   }
 
+  function validateEngine(): void {
+    checkAllJumpsAreValid()
+  }
 
-  while (tokenIndex < tokens.length) {
+  function checkAllJumpsAreValid(): void {
+    response.engine.elementList.forEach(element => {
+      if (element.type !== "Jump") {
+        return;
+      }
+
+      const jump = (element as elements.Jump);
+      if (response.engine.locationMap[jump.location]) {
+        return
+      }
+
+      addMessage("JUMP_LOCATION_NOT_FOUND", jump.location)
+    })
+  }
+
+  while (tokenIndex < tokens.length && response.success === true) {
     currentToken = tokens[tokenIndex];
 
     switch (currentToken.type) {
@@ -118,6 +178,8 @@ export function compileTokens(tokens: tokens.BaseToken[]): ICompilerResponse {
         addStandaloneTag();
         break;
 
+      case "Jump":
+        addJump();
 
       case "Paragraph":
         setCurrentParagraph();
@@ -127,6 +189,11 @@ export function compileTokens(tokens: tokens.BaseToken[]): ICompilerResponse {
     }
 
     tokenIndex += 1
+  }
+
+  if (response.success === true) {
+    validateEngine()
+
   }
 
   return response;
