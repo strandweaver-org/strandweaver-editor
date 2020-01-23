@@ -26,7 +26,7 @@ const COMPILER_MESSAGES = {
 
 export function compileScript(script: string): ICompilerResponse {
   const res = Parser.Script.parse(script)
-  if (res.status == false) {
+  if (res.status === false) {
     const failure = (res as P.Failure);
     return {
       success: false,
@@ -90,7 +90,7 @@ export function compileTokens(tokens: tokens.BaseToken[]): ICompilerResponse {
       return
     }
 
-    if (knotName.toUpperCase() == "DONE") {
+    if (knotName.toUpperCase() === "DONE") {
       addMessage("KNOT_CANNOT_BE_DONE", knotName);
       return
     }
@@ -100,13 +100,13 @@ export function compileTokens(tokens: tokens.BaseToken[]): ICompilerResponse {
     response.engine.addElement(currentDisplayElement);
 
 
-    if (beginningAddress == null) {
+    if (beginningAddress === null) {
       beginningAddress = currentKnot.name
     }
   }
 
   function setCurrentParagraph() {
-    if (currentKnot == null) {
+    if (currentKnot === null) {
       currentKnot = new elements.Knot();
       response.engine.addElement(currentKnot);
     }

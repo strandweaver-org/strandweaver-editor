@@ -12,7 +12,7 @@ export default class Engine {
   addElement(element: elements.BaseElement) {
     this.elementList.push(element);
     const newIndex = this.elementList.length - 1;
-    if (element.type == "Knot") {
+    if (element.type === "Knot") {
       this.locationMap[(element as elements.Knot).name] = newIndex;
 
     }

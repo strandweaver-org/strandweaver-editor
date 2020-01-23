@@ -8,7 +8,7 @@ function displayPrettyErrors(failure: P.Failure) {
 }
 expect.extend({
   toBeATokenOfType(received: tokens.BaseToken, type: string) {
-    if (received == null) {
+    if (received === null) {
       return {
         message: () => `expected an token of type ${type}, but was null`,
         pass: false,
@@ -30,14 +30,14 @@ expect.extend({
     }
   },
   toBeAKnotWithName(received: tokens.BaseToken | null, name: string) {
-    if (received == null) {
+    if (received === null) {
       return {
         message: () => `expected token to be a knot, but was null`,
         pass: false,
       }
     }
 
-    if ((received as tokens.Knot).name == name) {
+    if ((received as tokens.Knot).name === name) {
       return {
         message: () => `expected token to not be knot ${name}, but it was`,
         pass: true,
@@ -51,7 +51,7 @@ expect.extend({
 
   },
   toBeAKnot(received: tokens.BaseToken | null) {
-    if (received == null) {
+    if (received === null) {
       return {
         message: () => `expected token to be a knot, but was null`,
         pass: false,
@@ -71,7 +71,7 @@ expect.extend({
     }
   },
   toParseCorrectly(received: P.Result<any>) {
-    if (received.status == false) {
+    if (received.status === false) {
       return {
         message: () => `expected script to have no errors, but had errors:
       ${ displayPrettyErrors(received as P.Failure)} `,

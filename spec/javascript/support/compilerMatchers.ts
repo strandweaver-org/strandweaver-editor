@@ -10,7 +10,7 @@ function prettyPrintMessages(messages: ICompilerMessage[]): string {
 expect.extend({
   toHaveElementValue(res: ICompilerResponse, index: number, propertyName: string, expectedValue: any) {
     const expectedValueMsg = `expected element #${index}'s ${propertyName} to be ${expectedValue}`
-    if (res.success == false) {
+    if (res.success === false) {
       return {
         message: () => `${expectedValueMsg}, 
           but there were compilation problems:\n${prettyPrintMessages(res.messages)}`,
@@ -19,7 +19,7 @@ expect.extend({
     }
 
     const element = res.engine.elementList[index]
-    if (element == undefined) {
+    if (element === undefined) {
       return {
         message: () => `${expectedValueMsg}, but there was no element at index ${index}`,
         pass: false
@@ -27,7 +27,7 @@ expect.extend({
     }
 
     const property = element[propertyName];
-    if (property == undefined && expectedValue != undefined) {
+    if (property === undefined && expectedValue != undefined) {
       return {
         message: () => `${expectedValueMsg}, but there was no property ${propertyName}`,
         pass: false
@@ -53,7 +53,7 @@ expect.extend({
     }
   },
   toHaveNoCompilationMessages(res: ICompilerResponse) {
-    if (res.success == true) {
+    if (res.success === true) {
       return {
         message: () => `expected the compilation to have no errors or warnings, but had:
       ${ prettyPrintMessages(res.messages)} `,
@@ -70,7 +70,7 @@ expect.extend({
 
   },
   toCompileSuccessfully(res: ICompilerResponse) {
-    if (res.success == true) {
+    if (res.success === true) {
       return {
         message: () => `expected the compilation to work, but had errors:
       ${ prettyPrintMessages(res.messages)} `,
@@ -86,7 +86,7 @@ expect.extend({
     };
   },
   toContainCompilationMessageOfType(res: ICompilerResponse, type: string) {
-    if (res.success == true) {
+    if (res.success === true) {
       return {
         message: () =>
           `expected script to have messages of type ${type}, but had no messages.`,
