@@ -154,9 +154,14 @@ export function compileTokens(tokens: tokens.BaseToken[]): ICompilerResponse {
       }
 
       const jump = (element as elements.Jump);
+      if (jump.location == "END") {
+        return
+      }
+
       if (response.engine.locationMap[jump.location]) {
         return
       }
+
 
       addMessage("JUMP_LOCATION_NOT_FOUND", jump.location)
     })
