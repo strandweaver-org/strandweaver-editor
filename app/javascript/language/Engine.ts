@@ -5,6 +5,8 @@ export default class Engine {
   public elementList: elements.BaseElement[] = [];
   public locationMap: { [key: string]: number } = {};
 
+  public currentLocation: number;
+
   constructor() {
 
   }

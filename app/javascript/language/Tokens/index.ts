@@ -5,10 +5,12 @@ import InlineTag from './InlineTag';
 import StandaloneTag from './StandaloneTag';
 import Comment from './Comment';
 import Paragraph from './Paragraph';
+import Choice from './Choice';
 
 export {
   BaseToken,
   Paragraph,
+  Choice,
   Knot,
   Jump,
   InlineTag,

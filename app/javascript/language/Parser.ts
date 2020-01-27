@@ -2,37 +2,62 @@ import * as P from "parsimmon";
 import * as tokens from "./Tokens"
 
 function token(parser: P.Parser<any>) {
-  return parser.skip(P.optWhitespace)
+  return parser.skip(P.regexp(/[ \t]*/))
 }
 
 function StrandLanguage(indent: number): P.Language {
   return P.createLanguage({
     IndentedStatement: r =>
-      P.alt(
-        P.seqMap(
-          r.CountSpaces,
-          r.Statement,
-          (spaces, statement) => {
-            statement.indentLevel = spaces;
-            return statement;
+      P.seqMap(
+        r.CountSpaces,
+        r.Statement,
+        r.InlineTags,
+        r.InlineComment,
+        r.OptionalSpacesAndTabs,
+        P.newline,
+        (spaces, statement, tags) => {
+          tags.forEach((tag) => {
+            statement.addTag(tag);
+          })
+          // TODO: add tags here
+          statement.indentLevel = spaces;
+          return statement;
 
-          }
-        ),
-        r.Statement
+        }
       ),
 
-    CountSpaces: () => P.regexp(/^\s*/).map(s => s.length),
+
+    InlineTags: () => P.regexp(/[\t ]*# ([^#\r\n]+)/, 1)
+      .many()
+      .map((tags) => {
+        return tags.map((tag) => tag.trim())
+      }),
+
+    InlineComment: () => P.regexp(/(\/\/ (.+))?/),
+    OptionalSpacesAndTabs: () => P.regexp(/[ \t]*/),
+    CountSpaces: () => P.regexp(/^[ \t]*/).map(s => {
+      return s.length;
+
+    }),
     Statement: r => P.alt(
       r.Knot,
       r.StandaloneTag,
-      r.InlineTag,
-      r.Comment,
+      r.Choice,
+      r.StandaloneComment,
       r.Jump,
       r.Paragraph
     ),
     Script: r => r.IndentedStatement.many(),
 
-    Jump: r => P.regexp(/->\s*([A-Za-z0-9_]+)/, 1).chain(location => {
+    Choice: r => P.alt(
+      P.regexp(/\* ([^\n\r]+?)[ \t]*(?=(#[\t ]*[^\n\r]*|\/\/[^\n\r]*))/, 1),
+      P.regexp(/\* ([^\r\n]+)/, 1),
+    )
+      .chain(choiceText => {
+        return P.succeed(new tokens.Choice(choiceText))
+      }),
+
+    Jump: r => P.regexp(/->[ \t]*([A-Za-z0-9_]+)/, 1).chain(location => {
       return P.succeed(new tokens.Jump(location))
     }).thru(token),
 
@@ -40,30 +65,22 @@ function StrandLanguage(indent: number): P.Language {
       return P.succeed(new tokens.Knot(name))
     }).thru(token),
 
-    Comment: r => P.regexp(/\/\/ (.+)/, 1).chain((text) => {
+    StandaloneComment: r => P.regexp(/^#[ \t]*\/\/ (.+)/, 1).chain((text) => {
       return P.succeed(new tokens.Comment(text))
     }).thru(token),
 
-    StandaloneTag: r => P.regexp(/^#\s+([^#\n\r]+)/, 1).chain((text) => {
+    StandaloneTag: r => P.regexp(/^#[ \t]+([^#\n\r]+)/, 1).chain((text) => {
       return P.succeed(new tokens.StandaloneTag(text.trim()))
     }),
 
     Paragraph: r =>
       P.alt(
-        P.regexp(/([^\n\r]+?)\s*(?=(#\s*[^\n\r]*|\/\/[^\n\r]*|\<\>))/),
+        P.regexp(/([^\n\r]+?)[ \t]*(?=(#[\t ]*[^\n\r]*|\/\/[^\n\r]*|\<\>))/, 1),
         P.regexp(/[^\n\r]+/)
       )
         .chain((text) => {
           return P.succeed(new tokens.Paragraph(text.trim()));
-        }).thru(token),
-
-
-    InlineTag: r =>
-      P.regex(/#\s+([^#\n\r]+)/, 1)
-        .chain(val => {
-          return P.succeed(new tokens.InlineTag(val.trim()));
         }),
-
   });
 }
 
