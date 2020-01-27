@@ -53,20 +53,21 @@ expect.extend({
     }
   },
   toHaveNoCompilationMessages(res: ICompilerResponse) {
-    if (res.success === true) {
+    if (res.messages.length == 0) {
       return {
-        message: () => `expected the compilation to have no errors or warnings, but had:
-      ${ prettyPrintMessages(res.messages)} `,
+        message: () =>
+          `expected script to have compilation messages, but had no messages.`,
         pass: true,
-      };
-
+      }
     }
 
     return {
-      message: () =>
-        `expected script to have compilation messages, but had no messages.`,
+      message: () => `expected the compilation to have no errors or warnings, but had:
+    ${ prettyPrintMessages(res.messages)} `,
       pass: false,
     };
+
+
 
   },
   toCompileSuccessfully(res: ICompilerResponse) {

@@ -1,10 +1,17 @@
 import * as tokens from "@App/language/Tokens"
 import * as P from 'parsimmon';
+import { IParserResponse, IParserMessage } from "@App/language/Parser"
 
-function displayPrettyErrors(failure: P.Failure) {
-  return `${failure.expected.join("\n")}
-            (Line: ${failure.index.line}, Column: ${failure.index.column})
-   `
+
+function displayMessages(messages: IParserMessage[]): string {
+  return messages.map((message: IParserMessage) => {
+    let txt: string = `\n[${message.category}] ${message.type}:`
+    if (message.location) {
+      txt += ` Line: ${message.location.line}, Column: ${message.location.column}, Offset: ${message.location.offset}`
+    }
+    txt += `\n${message.text}`
+    return txt
+  }).join('\n')
 }
 expect.extend({
   toBeATokenOfType(received: tokens.BaseToken, type: string) {
@@ -70,11 +77,10 @@ expect.extend({
       pass: false,
     }
   },
-  toParseCorrectly(received: P.Result<any>) {
-    if (received.status === false) {
+  toParseCorrectly(received: IParserResponse) {
+    if (received.success === false) {
       return {
-        message: () => `expected script to have no errors, but had errors:
-      ${ displayPrettyErrors(received as P.Failure)} `,
+        message: () => `expected script to have no errors, but had errors:${displayMessages(received.messages)} `,
         pass: false,
       };
 

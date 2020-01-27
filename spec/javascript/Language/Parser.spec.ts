@@ -1,66 +1,74 @@
 // import StrandLanguage from "../../../app/javascript/parser/StrandLanguage"
 // TODO: currnetly including spec files in the webpack
-import parser from "@App/language/Parser";
+import strandParser from "@App/language/Parser";
 import * as P from 'parsimmon';
 
-function parse(text): P.Result<any> {
-  return parser.Script.parse(text);
-}
-
-describe("named knots", () => {
-  it("given a knot with extra whitespace", () => {
-    const res: P.Result<any> = parse(`=== opening_door === `);
+describe("handling whitespace", () => {
+  it("given a blank file", () => {
+    const res = strandParser(``);
 
     expect(res).toParseCorrectly();
 
-    const success = res as P.Success<any>;
-    expect(success.value[0]).toBeATokenOfType('Knot');
-  });
+  })
 
-  it("given two knots", () => {
-    const res = parse(`=== opening_door ===
-=== xxx ===
+  it("given empty lines", () => {
+    const res = strandParser(`
+    
+    
+    
+=== begin ===
+   
 `);
 
     expect(res).toParseCorrectly();
-    const success = res as P.Success<any>;
-    expect(success.value[0]).toBeAKnotWithName("opening_door");
-    expect(success.value[1]).toBeAKnotWithName("xxx");
+    expect(res.tokens[0]).toBeAKnotWithName("begin")
+
+  })
+})
+
+describe("named knots", () => {
+  it("given a knot with extra whitespace", () => {
+    const res = strandParser(`=== opening_door === `);
+
+    expect(res).toParseCorrectly();
+  });
+
+
+  it("given two knots", () => {
+    const res = strandParser(`=== opening_door ===
+
+=== xxx ===`);
+
+    expect(res).toParseCorrectly();
+    expect(res.tokens[0]).toBeAKnotWithName("opening_door");
+    expect(res.tokens[1]).toBeAKnotWithName("xxx");
   });
 
 })
 
 describe('tags', () => {
   it("an inline tag", () => {
-    const res = parse(`Text test # beep `);
+    const res = strandParser(`Text test # beep `);
     expect(res).toParseCorrectly();
-    const success = res as P.Success<any>;
-    expect(success.value[0]).toBeATokenOfType("Paragraph");
-    expect(success.value[1]).toBeATokenOfType("StandaloneTag");
-    expect(success.value[1].value).toBe('beep')
+    expect(res.tokens[0]).toBeATokenOfType("Paragraph");
+    expect(res.tokens[0].getTags()).toStrictEqual(["beep"])
 
   })
 
   it("handles multiple tags", () => {
-    const res = parse(`Text test # beep # boop `);
+    const res = strandParser(`Text test # beep # boop `);
     expect(res).toParseCorrectly();
-    const success = res as P.Success<any>;
-    expect(success.value[0]).toBeATokenOfType("Paragraph");
-    expect(success.value[1]).toBeATokenOfType("StandaloneTag");
-    expect(success.value[1].value).toBe('beep')
-    expect(success.value[2]).toBeATokenOfType("StandaloneTag");
-    expect(success.value[2].value).toBe('boop')
-
+    expect(res.tokens[0]).toBeATokenOfType("Paragraph");
+    expect(res.tokens[0].getTags()).toStrictEqual(["beep", "boop"])
   })
 
 
   it("a tag after a knot", () => {
-    const res = parse(`=== knotname ===
- # boop`);
+    const res = strandParser(`=== knotname ===
+   # boop`);
     expect(res).toParseCorrectly();
-    const success = res as P.Success<any>;
-    expect(success.value[0]).toBeATokenOfType("Knot");
-    expect(success.value[1]).toBeATokenOfType("StandaloneTag");
+    expect(res.tokens[0]).toBeATokenOfType("Knot");
+    expect(res.tokens[1]).toBeATokenOfType("StandaloneTag");
 
   })
 
@@ -69,11 +77,9 @@ describe('tags', () => {
 
 describe('inline comments', () => {
   it("an inline works", () => {
-    const res = parse(`Text test // beep`);
+    const res = strandParser(`Text test // beep`);
     expect(res).toParseCorrectly();
-    const success = res as P.Success<any>;
-    expect(success.value[0]).toBeATokenOfType("Paragraph");
-    expect(success.value[1]).toBeATokenOfType("Comment");
+    expect(res.tokens[0]).toBeATokenOfType("Paragraph");
 
   })
 
@@ -81,14 +87,12 @@ describe('inline comments', () => {
 
 describe('single line comments', () => {
   it("a comment and a knot work", () => {
-    const res = parse(`=== first_knot ===
-// yyy
-xxx`);
+    const res = strandParser(`=== first_knot ===
+  // yyy
+  xxx`);
     expect(res).toParseCorrectly();
-    const success = res as P.Success<any>;
-    expect(success.value[0]).toBeATokenOfType("Knot");
-    expect(success.value[1]).toBeATokenOfType("Comment");
-    expect(success.value[2]).toBeATokenOfType("Paragraph");
+    expect(res.tokens[0]).toBeATokenOfType("Knot");
+    expect(res.tokens[1]).toBeATokenOfType("Paragraph");
 
   })
 

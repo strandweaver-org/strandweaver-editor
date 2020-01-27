@@ -1,11 +1,11 @@
 import BaseToken from './BaseToken'
 
-export default class Comment extends BaseToken {
+export default class StandaloneComment extends BaseToken {
 
   public text: string
 
   constructor(text: string) {
-    super('Comment')
+    super('StandaloneComment')
     this.text = text
   }
 }

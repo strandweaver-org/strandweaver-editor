@@ -1,6 +1,6 @@
 import * as tokens from "@App/language/Tokens"
 import * as elements from "@App/language/Elements"
-import Parser from "./Parser"
+import strandParser, { IParserMessageLocation } from "./Parser"
 import * as P from "parsimmon"
 import Engine from "./Engine"
 
@@ -8,6 +8,7 @@ export interface ICompilerMessage {
   category: string;
   type: string;
   text: string;
+  location?: IParserMessageLocation;
 }
 
 export interface ICompilerResponse {
@@ -25,23 +26,16 @@ const COMPILER_MESSAGES = {
 }
 
 export function compileScript(script: string): ICompilerResponse {
-  const res = Parser.Script.parse(script)
-  if (res.status === false) {
-    const failure = (res as P.Failure);
+  const res = strandParser(script)
+  if (res.success === false) {
     return {
       success: false,
-      messages: [
-        {
-          category: 'error', type: "PARSING_FAILED",
-          text: `Parsing failed due to ${failure.expected.join("\n")}`
-        }
-      ]
+      messages: res.messages
     }
 
   }
 
-  const parseRes: P.Success<any> = (res as P.Success<any>)
-  return compileTokens(parseRes.value)
+  return compileTokens(res.tokens);
 }
 
 export function compileTokens(tokens: tokens.BaseToken[]): ICompilerResponse {

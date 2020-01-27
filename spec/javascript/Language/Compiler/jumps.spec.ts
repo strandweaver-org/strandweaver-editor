@@ -34,15 +34,12 @@ This is a body of water.
   it('jumps to the END are always correct', () => {
     const res = compileScript(`\
 -> brook
-
 === beep ===
 This is a sound.
 -> END
-
 === brook ===
 This is a body of water.
 -> END
-
 `)
 
     expect(res).toHaveNoCompilationMessages();
