@@ -36,7 +36,7 @@ export default function strandParser(text: string): IParserResponse {
     const success = parseResult as P.Success<any>;
     const tokens = success.value;
 
-    response.tokens = tokens.filter((token) =>
+    response.tokens = tokens.filter((token: tokens.BaseToken) =>
       token.type !== 'StandaloneComment' && token.type !== 'BlankLine')
   } else {
     response.success = false;

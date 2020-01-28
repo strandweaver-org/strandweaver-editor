@@ -10,6 +10,7 @@ How are you doing?
 `)
 
     expect(compileResult).toCompileSuccessfully();
+
     const client = new TestClient(compileResult.engine)
 
     expect(client).toDisplayTextMatching(/Hello\nHow are you doing?/)

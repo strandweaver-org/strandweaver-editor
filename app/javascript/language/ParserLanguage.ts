@@ -12,7 +12,7 @@ const strandLanguage = P.createLanguage({
         r.OptionalSpacesAndTabs,
         r.GoToNextLineWithContent,
         (spaces, statement, tags) => {
-          tags.forEach((tag) => {
+          tags.forEach((tag: string) => {
             statement.addTag(tag);
           })
           // TODO: add tags here

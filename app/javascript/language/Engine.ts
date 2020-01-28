@@ -1,9 +1,10 @@
 import * as elements from "./Elements"
+import BaseObject from "./Objects/BaseObject"
 
 export default class Engine {
-  public startLocation: elements.BaseElement | null;
-  public elementList: elements.BaseElement[] = [];
-  public locationMap: { [key: string]: number } = {};
+  public strandVersion: string;
+  public root: BaseObject[]
+  public locationMap: { [key: string]: BaseObject } = {}
 
   public currentLocation: number;
 
@@ -11,13 +12,11 @@ export default class Engine {
 
   }
 
-  addElement(element: elements.BaseElement) {
-    this.elementList.push(element);
-    const newIndex = this.elementList.length - 1;
-    if (element.type === "Knot") {
-      this.locationMap[(element as elements.Knot).name] = newIndex;
-
+  registerElementLocation(object: BaseObject) {
+    if (object.location == null) {
+      throw new Error("Location is null for object");
     }
-  }
 
+    this.locationMap[object.location] = object
+  }
 }
