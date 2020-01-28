@@ -24,6 +24,7 @@ module.exports = {
   },
   setupFilesAfterEnv: [
     "<rootDir>/spec/javascript/support/parserMatchers.ts",
-    "<rootDir>/spec/javascript/support/compilerMatchers.ts"
+    "<rootDir>/spec/javascript/support/compilerMatchers.ts",
+    "<rootDir>/spec/javascript/support/clientMatchers.ts",
   ]
 }

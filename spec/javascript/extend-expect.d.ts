@@ -8,5 +8,7 @@ declare namespace jest {
     toHaveNoCompilationMessages(): R;
     toHaveElementValue(index: number, property: string, value: any): R;
     toContainCompilationMessageOfType(type: string): R;
+    toDisplayTextMatching(regex: RegExp): R;
+    toBeAtEndOfScript(): R;
   }
 }
