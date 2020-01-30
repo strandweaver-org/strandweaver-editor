@@ -1,4 +1,3 @@
-import * as tokens from "@App/language/Tokens"
 import { compileScript } from "@App/language/Compiler"
 
 describe('jumps', () => {

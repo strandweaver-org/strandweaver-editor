@@ -1,5 +1,4 @@
 import { ICompilerMessage, ICompilerResponse } from "@App/language/Compiler"
-import * as deepEqual from 'fast-deep-equal'
 
 function prettyPrintMessages(messages: ICompilerMessage[]): string {
   return messages.map((msg: ICompilerMessage) => {

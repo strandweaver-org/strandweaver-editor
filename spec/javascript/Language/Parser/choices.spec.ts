@@ -1,7 +1,6 @@
 // import StrandLanguage from "../../../app/javascript/parser/StrandLanguage"
 // TODO: currnetly including spec files in the webpack
 import strandParser from "@App/language/Parser";
-import * as P from 'parsimmon';
 import * as tokens from '@App/language/Tokens';
 
 describe("choices", () => {

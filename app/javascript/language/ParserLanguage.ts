@@ -30,7 +30,7 @@ const strandLanguage = P.createLanguage({
       return tags.map((tag) => tag.trim())
     }),
 
-  GoToNextLineWithContent: () => P.custom((success, failure) => {
+  GoToNextLineWithContent: () => P.custom((success, _failure) => {
     return function (input, i) {
       let nextStartPoint = input.length;
       const whitespaceCodes = [9, 10, 13, 32];
@@ -67,7 +67,7 @@ const strandLanguage = P.createLanguage({
     r.Jump,
     r.Paragraph,
   ),
-  EndOfFile: r => P.seq(
+  EndOfFile: () => P.seq(
     P.optWhitespace,
     P.end
   )
@@ -76,7 +76,7 @@ const strandLanguage = P.createLanguage({
     }),
   Script: r => r.IndentedStatement.many().trim(P.optWhitespace),
 
-  Choice: r => P.alt(
+  Choice: () => P.alt(
     P.regexp(/\* ([^\n\r]+?)[ \t]*(?=(#[\t ]*[^\n\r]*|\/\/[^\n\r]*))/, 1),
     P.regexp(/\* ([^\r\n]+)/, 1),
   )
@@ -84,23 +84,23 @@ const strandLanguage = P.createLanguage({
       return P.succeed(new tokens.Choice(choiceText))
     }),
 
-  Jump: r => P.regexp(/->[ \t]*([A-Za-z0-9_]+)/, 1).chain(location => {
+  Jump: () => P.regexp(/->[ \t]*([A-Za-z0-9_]+)/, 1).chain(location => {
     return P.succeed(new tokens.Jump(location))
   }),
 
-  Knot: r => P.regexp(/===[ ]+([^\r\n]+)[ ]+===/, 1).chain(name => {
+  Knot: () => P.regexp(/===[ ]+([^\r\n]+)[ ]+===/, 1).chain(name => {
     return P.succeed(new tokens.Knot(name))
   }),
 
-  StandaloneComment: r => P.regexp(/\/\/ [^\n\r]+/, 1).chain((text) => {
+  StandaloneComment: () => P.regexp(/\/\/ [^\n\r]+/, 1).chain((text) => {
     return P.succeed(new tokens.StandaloneComment(text))
   }),
 
-  StandaloneTag: r => P.regexp(/^#[ \t]+([^#\n\r]+)/, 1).chain((text) => {
+  StandaloneTag: () => P.regexp(/^#[ \t]+([^#\n\r]+)/, 1).chain((text) => {
     return P.succeed(new tokens.StandaloneTag(text.trim()))
   }),
 
-  Paragraph: r =>
+  Paragraph: () =>
     P.alt(
       P.regexp(/([^\n\r]+?)[ \t]*(?=(#[\t ]*[^\n\r]*|\/\/[^\n\r]*|\<\>))/, 1),
       P.regexp(/[^\n\r]+/)

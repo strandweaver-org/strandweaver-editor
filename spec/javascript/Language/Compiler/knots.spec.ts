@@ -15,7 +15,7 @@ describe('knots', () => {
       new tokens.Knot("done"),
     ])
 
-    expect(res).toContainCompilationMessageOfType("KNOT_CANNOT_BE_DONE")
+    expect(res).toContainCompilationMessageOfType("KNOT_NAME_RESERVED")
   })
 
 

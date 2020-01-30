@@ -5,6 +5,11 @@ export default abstract class BaseClient {
 
   constructor(engine: Engine) {
     this.engine = engine;
+
+  }
+
+  getEngine(): Engine {
+    return this.engine;
   }
 
   abstract isStoryOver(): boolean;
