@@ -1,6 +1,6 @@
 // import StrandLanguage from "../../../app/javascript/parser/StrandLanguage"
 // TODO: currnetly including spec files in the webpack
-import strandParser from "@App/language/Parser";
+import strandParser from "@App/Language/Builder/Parser";
 
 describe("jumps", () => {
   it("get parsed correctly", () => {
@@ -19,10 +19,8 @@ This is a body of water.
 
     expect(res).toParseCorrectly();
 
-    expect(res.tokens[0]).toBeATokenOfType('Jump');
-    expect(res.tokens[1]).toBeATokenOfType('Knot');
-    expect(res.tokens[2]).toBeATokenOfType('Paragraph');
+    expect(res.tokens[0]).toBeATokenOfType("Jump");
+    expect(res.tokens[1]).toBeATokenOfType("Knot");
+    expect(res.tokens[2]).toBeATokenOfType("Paragraph");
   });
-
-
-})
+});

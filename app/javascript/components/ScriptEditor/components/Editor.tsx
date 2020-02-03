@@ -4,7 +4,7 @@ import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-markdown";
 import "ace-builds/src-noconflict/theme-github";
 
-import { useStoreActions, useStoreState } from '../hooks'
+import { useStoreActions, useStoreState } from "../hooks";
 
 interface IEditorProps {
   initialData: string;
@@ -14,7 +14,9 @@ const Editor: React.FC<IEditorProps> = ({ initialData }) => {
   const setData = useStoreActions(actions => actions.script.setData);
   const data = useStoreState(state => state.script.data);
 
-  useEffect(() => { setData(initialData) }, []);
+  useEffect(() => {
+    setData(initialData);
+  }, []);
 
   return (
     <div>
@@ -28,6 +30,6 @@ const Editor: React.FC<IEditorProps> = ({ initialData }) => {
       />
     </div>
   );
-}
+};
 
-export default Editor
+export default Editor;

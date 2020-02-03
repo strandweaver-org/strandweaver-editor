@@ -1,7 +1,7 @@
 export default abstract class BaseToken {
-  public type: string
-  public indentLevel: number
-  private tags: Set<string>
+  public type: string;
+  public indentLevel: number;
+  private tags: Set<string>;
 
   constructor(type: string, indentLevel?: number) {
     this.tags = new Set();

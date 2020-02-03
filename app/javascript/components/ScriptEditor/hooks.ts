@@ -1,5 +1,5 @@
-import {createTypedHooks} from 'easy-peasy'; // 👈import the helper
-import {StoreModel} from './Store/Models'; // 👈 import our model type
+import { createTypedHooks } from "easy-peasy"; // 👈import the helper
+import { StoreModel } from "./Store/Models"; // 👈 import our model type
 
 // Provide our model to the helper      👇
 const typedHooks = createTypedHooks<StoreModel>();

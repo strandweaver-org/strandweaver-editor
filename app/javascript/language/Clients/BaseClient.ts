@@ -1,11 +1,10 @@
-import Engine from "../Engine"
+import Engine from "../Engine";
 
 export default abstract class BaseClient {
-  private engine: Engine
+  private engine: Engine;
 
   constructor(engine: Engine) {
     this.engine = engine;
-
   }
 
   getEngine(): Engine {
@@ -13,4 +12,5 @@ export default abstract class BaseClient {
   }
 
   abstract isStoryOver(): boolean;
+  abstract sendEngineMessage(category: string): void;
 }

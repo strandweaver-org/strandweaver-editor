@@ -1,4 +1,4 @@
-import scriptModel, {ScriptModel} from './Script';
+import scriptModel, { ScriptModel } from "./Script";
 
 export interface StoreModel {
   script: ScriptModel;

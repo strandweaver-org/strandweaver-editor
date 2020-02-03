@@ -1,22 +1,21 @@
-import * as tokens from "@App/language/Tokens"
-import { compileTokens } from "@App/language/Compiler"
+import * as tokens from "@App/Language/Builder/Tokens";
+import { compileTokens } from "@App/Language/Builder/Compiler";
+import { BuildMessageType } from "@App/Language/Builder/Messages";
 
-describe('knots', () => {
-  it('a knot with a malformed name gets rejected', () => {
-    const res = compileTokens([
-      new tokens.Knot("start!"),
-    ])
+describe("knots", () => {
+  it("a knot with a malformed name gets rejected", () => {
+    const res = compileTokens([new tokens.Knot("start!")]);
 
-    expect(res).toContainCompilationMessageOfType("INVALID_KNOT_NAME")
-  })
+    expect(res).toContainCompilationMessageOfType(
+      BuildMessageType.InvalidKnotName
+    );
+  });
 
-  it('a knot with done as its name gets rejected', () => {
-    const res = compileTokens([
-      new tokens.Knot("done"),
-    ])
+  it("a knot with done as its name gets rejected", () => {
+    const res = compileTokens([new tokens.Knot("done")]);
 
-    expect(res).toContainCompilationMessageOfType("KNOT_NAME_RESERVED")
-  })
-
-
-})
+    expect(res).toContainCompilationMessageOfType(
+      BuildMessageType.KnotNameReserved
+    );
+  });
+});

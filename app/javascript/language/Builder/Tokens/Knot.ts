@@ -1,4 +1,4 @@
-import BaseToken from './BaseToken'
+import BaseToken from "./BaseToken";
 
 export default class Knot extends BaseToken {
   static knotNameCounter = 0;
@@ -6,13 +6,13 @@ export default class Knot extends BaseToken {
 
   private static generateKnotName() {
     const name = `k_${this.knotNameCounter}`;
-    this.knotNameCounter += 1
+    this.knotNameCounter += 1;
 
-    return name
+    return name;
   }
 
   constructor(name?: string) {
-    super('Knot')
+    super("Knot");
     this.name = name === undefined ? Knot.generateKnotName() : name;
   }
 }

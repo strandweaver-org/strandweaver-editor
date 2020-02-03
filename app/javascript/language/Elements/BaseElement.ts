@@ -12,6 +12,6 @@ export default class Element {
   }
 
   public getTags(): string[] {
-    return Array.from(this.tags.values())
+    return Array.from(this.tags.values());
   }
 }

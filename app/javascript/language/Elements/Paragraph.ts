@@ -1,9 +1,9 @@
-import BaseElement from './BaseElement'
+import BaseElement from "./BaseElement";
 
 export default class Paragraph extends BaseElement {
-  public text: string
+  public text: string;
   constructor(text: string) {
-    super('Paragraph')
+    super("Paragraph");
     this.text = text;
   }
 }

@@ -1,19 +1,19 @@
-import { compileScript } from "@App/language/Compiler"
+import { compileScript } from "@App/Language/Builder/Compiler";
 
-describe('jumps', () => {
-  it('to a non-existent place causes an error', () => {
+describe("jumps", () => {
+  it("to a non-existent place causes an error", () => {
     const res = compileScript(`\
 Hello
 -> brook
 
 === beep ===
 Test
-`)
+`);
 
-    expect(res).toContainCompilationMessageOfType("JUMP_LOCATION_NOT_FOUND")
-  })
+    expect(res).toContainCompilationMessageOfType("JumpLocationNotFound");
+  });
 
-  it('if all jumps are correct, no errors are thrown', () => {
+  it("if all jumps are correct, no errors are thrown", () => {
     const res = compileScript(`\
 -> brook
 
@@ -25,12 +25,12 @@ This is a sound.
 This is a body of water.
 -> beep
 
-`)
+`);
 
     expect(res).toHaveNoCompilationMessages();
-  })
+  });
 
-  it('jumps to the END are always correct', () => {
+  it("jumps to the END are always correct", () => {
     const res = compileScript(`\
 -> brook
 === beep ===
@@ -39,11 +39,8 @@ This is a sound.
 === brook ===
 This is a body of water.
 -> END
-`)
+`);
 
     expect(res).toHaveNoCompilationMessages();
-  })
-
-
-
-})
+  });
+});

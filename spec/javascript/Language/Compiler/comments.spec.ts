@@ -1,6 +1,6 @@
-import { compileScript } from "@App/language/Compiler"
+import { compileScript } from "@App/Language/Builder/Compiler";
 
-fit('comments are skipped', () => {
+fit("comments are skipped", () => {
   const res = compileScript(`\
 // beep
 // boop
@@ -9,7 +9,7 @@ Here's the beginning // another in-line comment
 // xxx
 // fff
 Almost to the end
-`)
+`);
 
   expect(res).toCompileSuccessfully();
-})
+});

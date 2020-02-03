@@ -1,12 +1,16 @@
-import Engine, { IMessageHandler } from "../Engine"
+import Engine from "../Engine";
+import {
+  BuildMessageHandler,
+  BuildMessageType
+} from "@App/Language/Builder/Messages";
 
 export default class BaseObject {
   public subObjects: BaseObject[] = [];
-  public location: string
+  public location: string;
   public props: { [key: string]: string } = {};
-  public type: string
-  public engine: Engine
-  public parent: BaseObject
+  public type: string;
+  public engine: Engine;
+  public parent: BaseObject;
 
   constructor(type: string, engine: Engine) {
     this.type = type;
@@ -21,15 +25,15 @@ export default class BaseObject {
     return subObject;
   }
 
-  validate(messageHandler: IMessageHandler) {
-    this.subObjects.forEach((object) => {
+  validate(messageHandler: BuildMessageHandler): void {
+    this.subObjects.forEach(object => {
       object.validate(messageHandler);
-    })
+    });
 
     if (this.type === "Jump") {
       const jumpDestination: string = this.props.destination;
       if (!(jumpDestination in this.engine.locationMap)) {
-        messageHandler("JUMP_LOCATION_NOT_FOUND", jumpDestination);
+        messageHandler(BuildMessageType.JumpLocationNotFound, jumpDestination);
       }
     }
   }

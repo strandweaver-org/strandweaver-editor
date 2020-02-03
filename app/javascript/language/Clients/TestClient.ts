@@ -1,5 +1,5 @@
-import BaseClient from './BaseClient'
-import Engine from '../Engine'
+import BaseClient from "./BaseClient";
+import Engine from "../Engine";
 
 export default class TestClient extends BaseClient {
   constructor(engine: Engine) {
@@ -12,5 +12,9 @@ export default class TestClient extends BaseClient {
 
   public currentDisplayedBlocks(): string {
     return "";
+  }
+
+  public sendEngineMessage(category: string): void {
+    console.log("engine", category);
   }
 }
