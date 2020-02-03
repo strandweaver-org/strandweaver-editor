@@ -1,5 +1,5 @@
-import { action, Action, computed, Computed } from 'easy-peasy';
-import Engine from 'strandweaver-machine'
+import { action, Action, computed, Computed } from "easy-peasy";
+import Engine from "strandweaver-machine";
 
 export interface ScriptModel {
   setData: Action<ScriptModel, string>;
@@ -12,7 +12,7 @@ const scriptModel: ScriptModel = {
     state.data = data;
   }),
   compilationResult: computed(state => state.data.length),
-  data: "",
+  data: ""
 };
 
 export default scriptModel;

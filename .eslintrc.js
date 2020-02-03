@@ -1,4 +1,5 @@
 const path = require("path");
+
 module.exports = {
   parser: "babel-eslint",
   plugins: ["prettier"],
@@ -8,11 +9,16 @@ module.exports = {
   rules: {
     "prettier/prettier": "error"
   },
+  settings: {
+    react: {
+      version: "detect"
+    }
+  },
   extends: ["prettier"],
   overrides: [
     {
       files: ["**/*.ts", "**/*.tsx"],
-      plugins: ["@typescript-eslint"],
+      plugins: ["@typescript-eslint", "prettier"],
       extends: [
         "plugin:@typescript-eslint/recommended",
         "prettier/@typescript-eslint",
@@ -25,9 +31,9 @@ module.exports = {
         "@typescript-eslint/no-unused-vars": [
           "error",
           {
-            "argsIgnorePattern": "^_"
+            argsIgnorePattern: "^_"
           }
-        ],
+        ]
       },
       parser: "@typescript-eslint/parser",
       parserOptions: {
@@ -45,4 +51,3 @@ module.exports = {
     es6: true
   }
 };
-

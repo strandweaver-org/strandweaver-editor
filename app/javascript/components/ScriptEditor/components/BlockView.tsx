@@ -1,16 +1,11 @@
 import React from "react";
 
-import { useStoreState } from '../hooks'
-
+import { useStoreState } from "../hooks";
 
 const BlockView: React.FC = () => {
   const data = useStoreState(state => state.script.data);
 
+  return <div></div>;
+};
 
-  return (
-    <div>
-    </div>
-  );
-}
-
-export default BlockView
+export default BlockView;
